@@ -1,10 +1,8 @@
-import './App.css'
-
 function App() {
 
   return (
     <>
-    <h1>Welcome to Elana</h1>
+    <h1 className="font-bold text-5xl">Welcome to Elana</h1>
     </>
   )
 }
