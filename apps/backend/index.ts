@@ -1,9 +1,17 @@
 // apps/api/index.ts
 import express from 'express';
 import { auth, requiresAuth } from 'express-openid-connect';
+import connectDB from './db';
+import dotenv from "dotenv";
 
+
+dotenv.config();
+connectDB();
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3012;
+
+
+
 
 const config = {
   authRequired: false,
