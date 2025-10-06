@@ -1,12 +1,12 @@
 // apps/api/index.ts
 import express from 'express';
 import { auth, requiresAuth } from 'express-openid-connect';
-import connectDB from './db';
+import { connectDB,prisma } from './db';
 import dotenv from "dotenv";
 
 
 dotenv.config();
-connectDB();
+connectDB()
 const app = express();
 const port = process.env.PORT || 3012;
 

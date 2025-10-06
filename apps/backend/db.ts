@@ -1,22 +1,15 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import { PrismaClient } from '@prisma/client';
 
-dotenv.config();
+const prisma = new PrismaClient();
 
 async function connectDB() {
   try {
-    const URL = process.env.MONGODB_URI;
-    if (!URL) {
-      throw new Error("MONGODB_URI is not defined");
-    }
-
-    await mongoose.connect(URL);
-    console.log("DataBase connected successfully");
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(`Error while connecting to DataBase: ${error.message}`);
-    }
+    await prisma.$connect();
+    console.log("Database connected successfully with Prisma");
+  } catch (error) {
+    console.error("Error while connecting to database:", error);
+    process.exit(1);
   }
 }
 
-export default connectDB;
+export { prisma, connectDB };
