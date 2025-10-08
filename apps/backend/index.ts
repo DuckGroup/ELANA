@@ -24,10 +24,7 @@ const config = {
 app.use(auth(config));
 
 app.get("/", (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-
-  console.log(req.oidc.accessToken);
-});
+  res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out")});
 
 app.use((req, res, next) => {
   const authorizationHeader = req.headers["Authorization"]; // "Bearer jwts.asdad.sad"
@@ -40,11 +37,9 @@ app.use((req, res, next) => {
 
   const decoded = jwtDecode(token as string);
 
-  console.log("Decoded token: ", decoded);
 });
 
 app.get("/profile", requiresAuth(), (req, res) => {
-  console.log(req.oidc.accessToken)
   res.send(JSON.stringify(req.oidc.user));
 });
 
