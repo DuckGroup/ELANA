@@ -31,7 +31,6 @@ app.get("/", (req, res) => {
 })
 
 app.get("/profile", requiresAuth(), (req, res) => {
-  console.log(req.oidc.accessToken)
   res.send(JSON.stringify(req.oidc.user));
 });
 app.listen(port, () => {
