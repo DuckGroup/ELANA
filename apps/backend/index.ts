@@ -28,9 +28,10 @@ app.use("/product", productRouter);
 
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-});
+})
 
 app.get("/profile", requiresAuth(), (req, res) => {
+  console.log(req.oidc.accessToken)
   res.send(JSON.stringify(req.oidc.user));
 });
 app.listen(port, () => {
