@@ -4,12 +4,14 @@ import { connectDB, prisma } from "./db";
 import dotenv from "dotenv";
 import { connectRabbitMQ } from "./src/repository/rabbitmq";
 import productRouter from "./src/routes/productRoutes";
+import userRouter from "./src/routes/userRoutes";
 
 dotenv.config();
 connectDB();
 const app = express();
 const port = process.env.PORT || 3012;
 connectRabbitMQ();
+
 
 const config = {
   authRequired: false,
@@ -19,8 +21,8 @@ const config = {
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
-
 app.use(auth(config));
+app.use("/", userRouter);
 
 app.use(express.json());
 
