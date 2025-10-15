@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { createSingleProduct } from "../services/productService";
+import { createSingleProduct, getAllProducts } from "../services/productService";
 import { createProductSchema } from "../validators/product";
 import type { Product } from "@prisma/client";
 import z from "zod";
@@ -29,3 +29,15 @@ export const createProduct = async (
       })
     }
   }
+
+export const getProducts = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const products = await getAllProducts()
+    res.status(200).json({
+      success: true, 
+      data: products
+    })
+  } catch (error) {
+    
+  }
+}
