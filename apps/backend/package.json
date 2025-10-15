@@ -8,12 +8,12 @@
     "build": "prisma generate && tsup ./src/index.ts"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.3",
+    "@prisma/client": "^6.17.1",
     "amqplib": "^0.10.9",
     "express": "^5.1.0",
     "express-openid-connect": "^2.19.2",
-    "prisma": "^6.16.3",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "prisma": "^6.17.1"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.7",

@@ -10,6 +10,7 @@ dotenv.config();
 connectDB();
 const app = express();
 const port = process.env.PORT || 3012;
+console.log(process.env.DATABASE_URL)
 connectRabbitMQ();
 
 
