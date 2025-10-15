@@ -14,7 +14,7 @@ export const createProduct = async (
     const validatedData = createProductSchema.parse(req.body);
     const product: Product = await createSingleProduct(validatedData);
     res.status(200).json(product);
-  } catch (error: any) {
+  } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         res.status(400).json({
           success: false,
@@ -22,7 +22,7 @@ export const createProduct = async (
           message: 'Invalid input data',
         })
         return
-      }
+      } else if (error instanceof Error) 
       res.status(error.message.includes('already exists') ? 409 : 400).json({
         success: false,
         message: error.message,
@@ -35,9 +35,16 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
     const products = await getAllProducts()
     res.status(200).json({
       success: true, 
-      data: products
-    })
-  } catch (error) {
-    
-  }
+      data: products,
+    message: 'Products retrieved successfully',
+      })
+    } catch (error: unknown) {
+      if(error instanceof Error) {
+        console.error('Error fetching products:', error)
+        res.status(500).json({
+          success: false,
+          message: error.message || 'Internal server error',
+        })
+      }
+    }
 }
