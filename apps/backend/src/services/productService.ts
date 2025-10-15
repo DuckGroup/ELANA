@@ -2,16 +2,18 @@ import { prisma } from "../../prisma/prisma";
 import { Prisma } from "../generated/client";
 import { type CreateProductInput, type Product } from "../validators/product";
 
-export const createSingleProduct = async (data: CreateProductInput): Promise<Product> => {
-  const existingProduct: Product | null = await prisma.product.findFirst({
-    where: { title: data.title },
-  });
-
-  if (existingProduct) {
-    throw new Error("A product with this title already exists");
-  }
- 
+export const createSingleProduct = async (
+  data: CreateProductInput
+): Promise<Product> => {
   try {
+    const existingProduct: Product | null = await prisma.product.findFirst({
+      where: { title: data.title },
+    });
+
+    if (existingProduct) {
+      throw new Error("A product with this title already exists");
+    }
+
     const product = await prisma.product.create({
       data: data,
     });
@@ -30,17 +32,15 @@ export const createSingleProduct = async (data: CreateProductInput): Promise<Pro
   }
 };
 
-export const getProductByTitle = async (data: Product) => {
+export const getProductByTitle = async (data: string) => {
   try {
-      const filteredProduct: Product | null = await prisma.product.findFirst({
-          where: {
-              title: data.title
-          }
-      })
-      return filteredProduct
-  } catch (error) {
-
-  }
+    const filteredProduct: Product | null = await prisma.product.findFirst({
+      where: {
+        title: data,
+      },
+    });
+    return filteredProduct;
+  } catch (error) {}
 };
 
 export const getAllProducts = async (): Promise<Product[]> => {

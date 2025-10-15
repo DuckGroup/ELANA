@@ -2,15 +2,16 @@ import { z } from "zod";
 
 export const createProductSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  introduction: z.string().optional(),
-  body: z.string().optional(),
-  description: z.string().optional(),
+  introduction: z.string().nullable().optional(),
+  body: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
   price: z.number().int().positive("Price must be a positive integer"),
-  status: z.boolean().optional(),
+  status: z.boolean().nullable().optional(),
   stock: z
     .number()
     .int()
     .nonnegative("Stock must be a non-negative integer")
+    .nullable()
     .optional(),
   basket_ids: z
     .array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId"))
@@ -18,16 +19,19 @@ export const createProductSchema = z.object({
 });
 export type CreateProductInput = z.infer<typeof createProductSchema>;
 
-export type Product = {
+export const getProductByTitleSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+});
+
+export type GetProductByTitleInput = z.infer<typeof getProductByTitleSchema>;
+
+export interface Product extends CreateProductInput {
   id: string;
-  title: string;
+  createdAt: Date;
+  updatedAt: Date;
   introduction: string | null;
   body: string | null;
   description: string | null;
-  price: number;
   status: boolean | null;
   stock: number | null;
-  basket_ids: string[];
-  createdAt: Date;
-  updatedAt: Date;
-};
+}
