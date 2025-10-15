@@ -37,6 +37,11 @@ app.use((req, res, next) => {
 
   const decoded = jwtDecode(token as string);
 
+  // if (decoded.something.role === 'admin') {
+    
+  // }
+
+  console.log("Decoded token: ", decoded);
 });
 
 app.get("/profile", requiresAuth(), (req, res) => {
