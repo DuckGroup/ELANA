@@ -1,18 +1,31 @@
 import type { Request, Response } from "express";
 import { createSingleProduct } from "../services/productService";
+import { createProductSchema } from "../validators/product";
+import type { Product } from "@prisma/client";
+import z from "zod";
+import { Prisma } from "../generated/client";
 
 export const createProduct = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const user = await createSingleProduct(req, res)
-    res.status(200).json(user)
-  } catch (error) {
-    console.error("Error creating product:", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
+    console.log("hello");
+    const validatedData = createProductSchema.parse(req.body);
+    const product: Product = await createSingleProduct(validatedData);
+    res.status(200).json(product);
+  } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({
+          success: false,
+          errors: error.message,
+          message: 'Invalid input data',
+        })
+        return
+      }
+      res.status(error.message.includes('already exists') ? 409 : 400).json({
+        success: false,
+        message: error.message,
+      })
+    }
   }
-};

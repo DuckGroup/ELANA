@@ -1,19 +1,31 @@
 import { prisma } from "../../prisma/prisma";
-import { createProductSchema } from "../validators/product";
-import type { Request, Response } from "express";
+import { Prisma } from "../generated/client";
+import { type CreateProductInput, type Product } from "../validators/product";
 
-export const createSingleProduct = async (
-    req: Request, 
-    res: Response
-) => {
-    try {
-  const validatedData = createProductSchema.parse(req.body);
-
-  const product = await prisma.product.create({
-    data: validatedData,
+export const createSingleProduct = async (data: CreateProductInput) => {
+  const existingProduct: Product | null = await prisma.product.findFirst({
+    where: { title: data.title },
   });
-  return product;
-} catch (error) {
-    res.status(500).json({ message: "error creating single product"});
+
+  if (existingProduct) {
+    throw new Error("A product with this title already exists");
+  }
+
+  try {
+    const product = await prisma.product.create({
+      data: data,
+    });
+
+    return product;
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        throw new Error("A product with this title already exists");
+      }
+      if (error.code === "P2025") {
+        throw new Error("One or more basket IDs do not exist");
+      }
+    }
+    throw new Error("Failed to create product");
   }
 };
