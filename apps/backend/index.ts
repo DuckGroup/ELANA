@@ -13,7 +13,6 @@ const port = process.env.PORT || 3012;
 console.log(process.env.DATABASE_URL)
 connectRabbitMQ();
 
-
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -22,7 +21,11 @@ const config = {
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
+
 app.use(auth(config));
+
+app.use(express.json())
+
 app.use("/", userRouter);
 
 app.use(express.json());
