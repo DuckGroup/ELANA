@@ -1,10 +1,9 @@
-// apps/api/index.ts
 import express from "express";
 import { auth, requiresAuth } from "express-openid-connect";
 import { connectDB, prisma } from "./db";
 import dotenv from "dotenv";
-import { jwtDecode } from "jwt-decode";
 import { connectRabbitMQ } from "./src/repository/rabbitmq";
+import productRouter from "./src/routes/productRoutes";
 
 dotenv.config();
 connectDB();
@@ -23,31 +22,17 @@ const config = {
 
 app.use(auth(config));
 
+app.use(express.json());
+
+app.use("/product", productRouter);
+
 app.get("/", (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out")});
-
-app.use((req, res, next) => {
-  const authorizationHeader = req.headers["Authorization"]; // "Bearer jwts.asdad.sad"
-
-  if (!authorizationHeader) {
-    console.log("Ingenn token!");
-    return;
-  }
-  const token = (authorizationHeader as string).split(" ")[1];
-
-  const decoded = jwtDecode(token as string);
-
-  // if (decoded.something.role === 'admin') {
-    
-  // }
-
-  console.log("Decoded token: ", decoded);
+  res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
 
 app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
-
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
