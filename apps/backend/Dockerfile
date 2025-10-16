@@ -1,0 +1,12 @@
+FROM oven/bun:1.2
+
+WORKDIR /app
+COPY package.json .
+COPY bun.lockb .
+RUN bun install --frozen-lockfile
+
+COPY . .
+RUN bun run build
+
+EXPOSE 3012
+CMD ["bun", "start"]
