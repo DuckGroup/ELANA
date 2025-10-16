@@ -3,14 +3,15 @@ import { createUserService, getUsersService } from "../services/userService";
 import { PrismaClient } from "@prisma/client/extension";
 import { prisma } from "../../prisma/prisma";
 
-export const getUsers = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const users = await getUsersService(req, res);
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching users", error });
-  }
-};
+export const getUsers = async (req: Request, res: Response): Promise<void> =>{
+    try {
+        const users = await getUsersService();
+        res.status(200).json(users);
+    } catch (error){
+        console.error("Could not fetch users:", error);
+        res.status(400).json({ message: (error as Error).message});
+    }
+}
 
 export const createUser = async (
   req: Request,
