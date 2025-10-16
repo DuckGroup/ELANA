@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "build": "bun build index.ts --outdir=dist",
+    "build": "bun build ./index.ts --outdir=dist --target=bun",
     "start": "bun run dist/index.js",
-    "dev": "bun --watch index.ts"
+    "dev": "bun --watch index.ts",
+    "generate": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
