@@ -10,6 +10,7 @@ import { authRouter } from "./src/routes/authRoutes";
 dotenv.config();
 connectDB();
 const app = express();
+app.use(express.json)
 const port = process.env.PORT || 3012;
 console.log(process.env.DATABASE_URL)
 connectRabbitMQ();
@@ -22,7 +23,6 @@ const config = {
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
-
 app.use(auth(config));
 
 app.use(express.json())
