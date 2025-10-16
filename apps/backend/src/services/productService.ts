@@ -1,6 +1,10 @@
 import { prisma } from "../../prisma/prisma";
 import { Prisma } from "../generated/client";
-import { type CreateProductInput, type Product } from "../validators/product";
+import {
+  type CreateProductInput,
+  type Product,
+  type ProductUpdateData,
+} from "../validators/product";
 
 export const createSingleProduct = async (
   data: CreateProductInput
@@ -32,34 +36,42 @@ export const createSingleProduct = async (
   }
 };
 
-export const getProductByTitle = async (data: string) => {
+export const filterProductsByTitle = async (data: string): Promise<Product> => {
   try {
-    const filteredProduct: Product | null = await prisma.product.findFirst({
+    const filteredProduct = await prisma.product.findFirst({
       where: {
-        title: data,
+        title: {
+          startsWith: data,
+          mode: "insensitive",
+        },
       },
     });
+    if (!filteredProduct) throw Error("Could not find product");
     return filteredProduct;
-  } catch (error) {}
+  } catch (error) {
+    throw Error("Failed to find product");
+  }
 };
 
 export const getAllProducts = async (): Promise<Product[]> => {
   try {
-    const products = await prisma.product.findMany();
+    const products: Product[] = await prisma.product.findMany();
     return products;
   } catch (error) {
     throw new Error("failed to fetch products from database");
   }
 };
 
-export const updateSingleProduct = async (data: Product) => {
+export const updateSingleProductDetails = async (
+  id: string,
+  data: ProductUpdateData
+): Promise<Product> => {
   try {
     const updatedProduct = await prisma.product.update({
-      where: {
-        id: data.id,
-      },
+      where: { id },
       data: {
-        title: data.title,
+        ...data,
+        updatedAt: new Date(),
       },
     });
     return updatedProduct;
@@ -68,10 +80,15 @@ export const updateSingleProduct = async (data: Product) => {
   }
 };
 
-export const deleteSingleProduct = (data: Product) => {
-  // try {
-  //     const deletedProduct = prisma.product.delete(
-  //     )
-  // } catch (error) {
-  // }
+export const deleteSingleProduct = (data: string): Promise<Product> => {
+  try {
+    const deletedProduct = prisma.product.delete({
+      where: {
+        id: data,
+      },
+    });
+    return deletedProduct;
+  } catch (error) {
+    throw new Error("failed to delete product");
+  }
 };

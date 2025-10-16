@@ -1,12 +1,16 @@
 import type { Request, Response } from "express";
 import {
   createSingleProduct,
+  deleteSingleProduct,
+  filterProductsByTitle,
   getAllProducts,
-  getProductByTitle,
+  updateSingleProductDetails,
 } from "../services/productService";
 import {
-  createProductSchema,
+  baseProductSchema,
   getProductByTitleSchema,
+  productSchema,
+  updateProductSchema,
 } from "../validators/product";
 import z from "zod";
 
@@ -15,8 +19,7 @@ export const createProduct = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("hello");
-    const validatedData = createProductSchema.parse(req.body);
+    const validatedData = baseProductSchema.parse(req.body);
     const product = await createSingleProduct(validatedData);
     res.status(200).json(product);
   } catch (error: unknown) {
@@ -57,13 +60,13 @@ export const getProducts = async (
   }
 };
 
-export const getProduct = async (
+export const getProductsByTitle = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const validatedData = getProductByTitleSchema.parse(req.body);
-    const product = await getProductByTitle(validatedData.title);
+    const product = await filterProductsByTitle(validatedData.title);
     res.status(200).json({
       success: true,
       data: product,
@@ -72,6 +75,76 @@ export const getProduct = async (
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Error fetching products:", error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
+    }
+  }
+};
+export const updateProduct = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      res.status(400).json({
+        success: false,
+        message: "Product ID is required",
+      });
+      return;
+    }
+
+    const validatedData = updateProductSchema.partial().parse(req.body);
+    const product = await updateSingleProductDetails(id, validatedData);
+
+    res.status(200).json({
+      success: true,
+      data: product,
+      message: "Product updated successfully",
+    });
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({
+        success: false,
+        errors: error.issues,
+        message: "Invalid input data",
+      });
+      return;
+    }
+    if (error instanceof Error) {
+      const status = error.message.includes("not found") ? 404 : 500;
+      res.status(status).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
+
+export const deleteProduct = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      res.status(400).json({
+        success: false,
+        message: "Product ID is required",
+      });
+      return;
+    }
+    const product = await deleteSingleProduct(id);
+    res.status(200).json({
+      success: true,
+      data: product,
+      message: "Product deleted successfully",
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error deleting product:", error);
       res.status(500).json({
         success: false,
         message: error.message || "Internal server error",
