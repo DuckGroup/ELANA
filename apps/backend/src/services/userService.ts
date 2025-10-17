@@ -24,3 +24,27 @@ export const createUserService = async (email: string, role: string) => {
   console.log("User created:", user);
   return user;
 };
+
+export const getUserByIdService = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: {id},
+  })
+  if (!user) throw new Error (`User with id ${id} not found`)
+  return user;
+}
+
+export const deleteUserService = async (id: string) => {
+  const user = await prisma.user.delete({
+    where: { id },
+  });
+  return user;
+};
+
+export const updateUserService = async (id: string, data: {email?: string, role?: string}) => {
+  const user = await prisma.user.update({
+    where: { id },
+    data,
+  });
+  return user;
+};
+
