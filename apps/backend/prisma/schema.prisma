@@ -15,6 +15,7 @@ model User {
   basket    Basket?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  auth0Id String? @unique
 }
 
 model Product {
