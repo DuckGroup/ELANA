@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { connectRabbitMQ } from "./src/repository/rabbitmq";
 import productRouter from "./src/routes/productRoutes";
 import userRouter from "./src/routes/userRoutes";
+import { authRouter } from "./src/routes/authRoutes";
 
 dotenv.config();
 connectDB();
