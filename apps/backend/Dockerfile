@@ -11,5 +11,7 @@ RUN bunx prisma generate
 COPY . .
 RUN bun run build
 
-EXPOSE 3012
+ENV NODE_ENV=production
+
+EXPOSE 3000
 CMD ["bun", "start"]
