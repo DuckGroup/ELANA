@@ -10,8 +10,9 @@ import { authRouter } from "./src/routes/authRoutes";
 dotenv.config();
 connectDB();
 const app = express();
-const port = process.env.PORT || 3012;
-console.log(process.env.DATABASE_URL)
+const port = parseInt(process.env.PORT || "3013", 10);
+const host = "0.0.0.0";
+app.use(express.json());
 connectRabbitMQ();
 
 const config = {
@@ -22,24 +23,21 @@ const config = {
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
-
 app.use(auth(config));
-
-app.use(express.json())
-
-app.use("/", userRouter);
-
 app.use(express.json());
 
+app.use("/", userRouter);
 app.use("/product", productRouter);
 
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-})
+});
 
 app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+
+
+app.listen(port, host, () => {
+  console.log(`Server running at http://${host}:${port}`);
 });
