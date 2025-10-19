@@ -24,7 +24,6 @@ const config = {
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
 app.use(auth(config));
-app.use(express.json());
 
 app.use("/", userRouter);
 app.use("/product", productRouter);

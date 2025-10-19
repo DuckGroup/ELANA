@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "build": "bunx prisma generate && bun build ./index.ts --outdir=dist --target=bun --sourcemap",
-    "start": "bun run dist/index.js",
+    "build": "bunx prisma generate && bun build ./index.ts --outdir=dist --target=node --sourcemap",
+    "start": "node dist/index.js",
     "dev": "bun --watch index.ts",
-    "generate": "prisma generate"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
@@ -14,11 +14,16 @@
     "express": "^5.1.0",
     "express-openid-connect": "^2.19.2",
     "zod": "^4.1.12",
-    "prisma": "^6.17.1"
+    "prisma": "^6.17.1",
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.7",
     "@types/express": "^5.0.3",
-    "tsup": "^8.5.0"
+    "@types/node": "^20",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
