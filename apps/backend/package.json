@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "build": "bunx prisma generate && bun build ./index.ts --outdir=dist --target=node --sourcemap",
-    "start": "node dist/index.js",
+    "build": "bunx prisma generate && bun build ./index.ts --target=node --outfile=dist/index.js",
+    "start": "bun dist/index.js", 
     "dev": "bun --watch index.ts",
     "postinstall": "prisma generate"
   },
@@ -23,6 +23,7 @@
     "@types/node": "^20",
     "typescript": "^5"
   },
+  "packageManager": "bun@1.1.8",
   "engines": {
     "node": ">=18"
   }
