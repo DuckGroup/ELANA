@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Copy package.json and install dependencies
 COPY package.json .
-COPY bun.lockb .
 RUN bun install
 
 # Copy prisma schema and generate client
