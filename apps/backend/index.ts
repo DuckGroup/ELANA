@@ -6,6 +6,7 @@ import { connectRabbitMQ } from "./src/repository/rabbitmq";
 import productRouter from "./src/routes/productRoutes";
 import userRouter from "./src/routes/userRoutes";
 import { authRouter } from "./src/routes/authRoutes";
+import basketRouter from "./src/routes/basketRouter";
 
 dotenv.config();
 connectDB();
@@ -27,7 +28,7 @@ app.use(auth(config));
 
 app.use("/", userRouter);
 app.use("/product", productRouter);
-
+app.use("/basket", basketRouter);
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
