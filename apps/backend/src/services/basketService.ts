@@ -1,16 +1,8 @@
-import { Prisma, type Basket } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/prisma";
 
-export const createBasketService = async (user_id: string): Promise<Basket> => {
+export const createBasketService = async (user_id: string) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: user_id },
-    });
-
-    if (!user) {
-      throw new Error(`User with id ${user_id} not found`);
-    }
-
     const basket = await prisma.basket.create({
       data: {
         user_id: user_id,
