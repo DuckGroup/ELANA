@@ -7,6 +7,7 @@ import productRouter from "./src/routes/productRoutes";
 import userRouter from "./src/routes/userRoutes";
 import authRouter from "./src/routes/authRoutes";
 import orderRouter from "./src/routes/orderRoutes";
+import basketRouter from "./src/routes/basketRouter";
 import cors from "cors";
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use("/product", productRouter);
 app.use("/orders", orderRouter)
 app.use("/auth", authRouter);
 
+app.use("/basket", basketRouter);
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
