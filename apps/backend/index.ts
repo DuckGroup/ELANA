@@ -24,7 +24,6 @@ const config = {
   issuerBaseURL: process.env.ISSUER_BASE_URL,
 };
 app.use(auth(config));
-app.use(express.json());
 
 app.use("/", userRouter);
 app.use("/product", productRouter);
@@ -36,7 +35,6 @@ app.get("/", (req, res) => {
 app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
-
 
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}`);
