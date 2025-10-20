@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "build": "bunx prisma generate && bun build ./index.ts --target=node --outfile=dist/index.js",
-    "start": "bun dist/index.js", 
-    "dev": "bun --watch index.ts",
-    "postinstall": "prisma generate"
+    "build": "prisma generate && tsup ./index.ts",
+    "start": "bun run dist/index.js",
+    "dev": "bun run --watch index.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",
