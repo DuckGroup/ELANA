@@ -5,7 +5,8 @@
   "scripts": {
     "build": "prisma generate && tsup ./index.ts",
     "start": "bun run dist/index.js",
-    "dev": "bun run --watch index.ts"
+    "dev": "bun run --watch index.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.17.1",

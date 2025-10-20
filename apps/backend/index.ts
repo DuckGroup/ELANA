@@ -36,7 +36,6 @@ app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
 
-
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}`);
 });
