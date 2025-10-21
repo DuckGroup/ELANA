@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { adminNavItems } from "../constants/adminNavItems";
 
 
-export default function AdminSidebar() {
+export const AdminSidebar = ()=> {
   const pathname = usePathname();
 
   const linkClasses = (isActive: boolean) =>
