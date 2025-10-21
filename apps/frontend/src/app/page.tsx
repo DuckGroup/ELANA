@@ -15,6 +15,7 @@ export default async function Home() {
         <a href="/auth/login">
           <button>Log in</button>
         </a>
+        <p>HDIAWHDKASHDKAJSDHKAJSDHAKJSDhAKSJHAKJSDHAKEJFHNSRKjbgn</p>
       </main>
     );
   }
