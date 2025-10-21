@@ -3,37 +3,44 @@ import Link from "next/link";
 type Props = {
   buttonType: "click" | "link";
   name: string;
-  color: "red" | "beige";
+  color: "primary" | "secondary" | "white";
   textColor?: "white" | "black";
   route?: string;
   onClick?: () => void;
-  disabled?: boolean;
 };
 
-export const Button = ({ name, color, route, buttonType, disabled, onClick, textColor }: Props) => {
-  const className =
-      color === "red"
-      ? `bg-[#A8333E] hover:bg-[#8F2C35] text-${textColor}  py-2 px-4 border-[#8F2C35] border-b-[3px] border-r-[3px] transition-all duration-200 ${
-          disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
-        }`
-      : color === "beige"
-      ? `bg-[#F4E9D8] hover:bg-[#E8DBC4] text-${textColor} py-2 px-4 border-[#E8DBC4] border-b-[3px] border-r-[3px] transition-all duration-200 ${
-          disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
-        }`
-      : `bg-white hover:bg-gray-200 text-${textColor}  py-2 px-4 border-gray-200 border-b-[3px] border-r-[3px] transition-all duration-200 ${
-          disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
-        }`;
+export const Button = ({
+  name,
+  color,
+  route,
+  buttonType,
+  onClick,
+  textColor = "black",
+}: Props) => {
+  const bgColors = {
+    primary: "bg-primary",
+    secondary: "bg-secondary",
+    white: "bg-white",
+  };
+
+  const textColors = {
+    white: "text-white",
+    black: "text-black",
+  };
+
+  const className = `${bgColors[color]} ${textColors[textColor]} hover:bg-gray-200 py-2 px-4 border-b-[3px] border-r-[3px] transition-all duration-200`;
+
   if (buttonType === "link" && route) {
-      return (
-          <Link href={route} className={className}>
-              {name}
-          </Link>
-      );
-  } else {
-      return (
-          <button onClick={onClick} className={className} disabled={disabled}>
-              {name}
-          </button>
-      );
+    return (
+      <Link href={route} className={className}>
+        {name}
+      </Link>
+    );
   }
+
+  return (
+    <button onClick={onClick} className={className}>
+      {name}
+    </button>
+  );
 };
