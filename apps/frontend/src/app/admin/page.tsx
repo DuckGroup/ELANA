@@ -1,7 +1,3 @@
 export default function AdminPage() {
-  return (
-    <section>
-    
-    </section>
-  );
+  return <section></section>;
 }
