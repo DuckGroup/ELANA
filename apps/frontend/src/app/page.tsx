@@ -1,5 +1,6 @@
 import { auth0 } from "@/lib/auth0";
 import './globals.css';
+import { Header } from "./components/header";
 
 export default async function Home() {
   const session = await auth0.getSession();
@@ -7,6 +8,7 @@ export default async function Home() {
   if (!session) {
     return (
       <main>
+        <Header></Header>
         <a href="/auth/login?screen_hint=signup">
           <button>Sign up</button>
         </a>
