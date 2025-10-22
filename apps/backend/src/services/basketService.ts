@@ -1,4 +1,4 @@
-import { type Basket, Prisma } from "@prisma/client";
+import { Prisma, type Basket } from "@prisma/client";
 import { prisma } from "../../prisma/prisma";
 
 export const createBasketService = async (user_id: string): Promise<Basket> => {
