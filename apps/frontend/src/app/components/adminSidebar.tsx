@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { adminNavItems } from "../constants/adminNavItems";
+import { MobileSidebar } from "./mobileSidebar";
 
 
 export const AdminSidebar = ()=> {
@@ -18,6 +19,8 @@ export const AdminSidebar = ()=> {
     ].join(" ");
 
   return (
+    <>
+    <MobileSidebar />
     <aside className="hidden md:flex flex-col items-center gap-10 p-6 bg-stone-50 min-h-screen w-64 border-r border-stone-200 shadow-sm">
       <div className="mt-4 mb-6">
         <Image src="/elana_logo.svg" alt="Elana logo" width={160} height={80} />
@@ -42,5 +45,6 @@ export const AdminSidebar = ()=> {
         })}
       </nav>
     </aside>
+    </>
   );
 }
