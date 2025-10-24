@@ -2,20 +2,18 @@ import { z } from "zod";
 
 export const baseProductSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  introduction: z.string().nullable().optional(),
-  body: z.string().nullable().optional(),
-  description: z.string().nullable().optional(),
+  introduction: z.string().nullable(),
+  body: z.string().nullable(),
+  description: z.string().nullable(),
   price: z.number().int().positive("Price must be a positive integer"),
-  status: z.boolean().nullable().optional(),
+  status: z.boolean().nullable(),
   stock: z
     .number()
     .int()
     .nonnegative("Stock must be a non-negative integer")
-    .nullable()
-    .optional(),
+    .nullable(),
   basket_ids: z
-    .array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId"))
-    .optional(),
+    .array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
 });
 
 export type CreateProductInput = z.infer<typeof baseProductSchema>;
@@ -27,7 +25,7 @@ export const productSchema = baseProductSchema.extend({
 });
 export type Product = z.infer<typeof productSchema>;
 
-export const updateProductSchema = productSchema.partial().extend({
+export const updateProductSchema = productSchema.extend({
   id: z.string(),
 });
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
