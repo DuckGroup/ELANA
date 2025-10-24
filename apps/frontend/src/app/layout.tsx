@@ -4,7 +4,7 @@ import "./globals.css";
 
 const playfair = Playfair({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "700"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-playfair",
@@ -22,6 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en">
       <body className={`${playfair.className} antialiased`}>{children}</body>
     </html>
