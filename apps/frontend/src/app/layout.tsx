@@ -12,8 +12,7 @@ const playfair = Playfair({
 
 export const metadata: Metadata = {
   title: "Elana",
-  description:
-    "Jewelry shop with new designs and an awesome community",
+  description: "Jewelry shop with new designs and an awesome community",
   appleWebApp: { title: "Elana" },
 };
 export default function RootLayout({
@@ -22,7 +21,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
     <html lang="en">
       <body className={`${playfair.className} antialiased`}>{children}</body>
     </html>

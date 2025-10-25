@@ -13,7 +13,6 @@ export const ProductDisplay = ({
           <ProductCard
             key={product.id}
             image="/elana_logo.svg"
-            product_name={product.title}
             title={product.title}
             price={product.price}
           />

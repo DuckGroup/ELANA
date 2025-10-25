@@ -13,6 +13,5 @@ export const api = axios.create({
 
 export async function getProducts(): Promise<Product[]> {
   const res = await api.get("/product");
-  console.log(res)
   return Array.isArray(res.data.data) ? res.data.data : [];
 }

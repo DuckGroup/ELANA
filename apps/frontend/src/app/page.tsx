@@ -8,7 +8,6 @@ import { ProductDisplay } from "./components/products/productDisplay";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE! || "";
 
   useEffect(() => {
     // const session = await auth0.getSession();
@@ -22,7 +21,7 @@ export default function Home() {
     }
 
     fetchProducts();
-  }, [apiBase]);
+  }, []);
   return (
     <main>
       <Header></Header>

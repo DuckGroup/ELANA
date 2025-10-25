@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 type Props = {
   image: string;
-  product_name: string;
   title: string;
   price: number;
   category?: string;
@@ -12,10 +11,9 @@ export const ProductCard = ({
   title,
   price,
   // category,
-  product_name,
 }: Props) => {
   return (
-    <Link href={`/${product_name}`} className="w-40 md:w-56 hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] transition-shadow duration-200">
+    <Link href={`/${title}`} className="w-40 md:w-56 hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] transition-shadow duration-200">
       <article className="flex flex-col h-full">
         <div className="w-full relative">
         <Image
