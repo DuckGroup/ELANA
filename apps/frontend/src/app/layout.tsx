@@ -4,7 +4,7 @@ import "./globals.css";
 
 const playfair = Playfair({
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "700"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-playfair",
@@ -12,8 +12,7 @@ const playfair = Playfair({
 
 export const metadata: Metadata = {
   title: "Elana",
-  description:
-    "Jewelry shop with new designs and an awesome community",
+  description: "Jewelry shop with new designs and an awesome community",
   appleWebApp: { title: "Elana" },
 };
 export default function RootLayout({

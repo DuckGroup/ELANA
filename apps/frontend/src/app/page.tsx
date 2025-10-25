@@ -1,32 +1,39 @@
-import { auth0 } from "@/lib/auth0";
-import './globals.css';
+"use client";
+import "./globals.css";
 import { Header } from "./components/header";
+import { useEffect, useState } from "react";
+import { getProducts } from "@/lib/api";
+import { Product } from "@/types/product";
+import { ProductDisplay } from "./components/products/productDisplay";
 
-export default async function Home() {
-  const session = await auth0.getSession();
+export default function Home() {
+  const [products, setProducts] = useState<Product[]>([]);
 
-  if (!session) {
-    return (
-      <main>
-        <Header></Header>
-        <a href="/auth/login?screen_hint=signup">
-          <button>Sign up</button>
-        </a>
-        <a href="/auth/login">
-          <button>Log in</button>
-        </a>
-      </main>
-    );
-  }
+  useEffect(() => {
+    // const session = await auth0.getSession();
+    async function fetchProducts() {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (error: unknown) {
+        console.error("Failed to fetch products:", error);
+      }
+    }
 
+    fetchProducts();
+  }, []);
   return (
     <main>
-      <h1>Welcome, {session.user.name}!</h1>
-      <p>
-        <a href="/auth/logout">
-          <button>Log out</button>
-        </a>
-      </p>
+      <Header></Header>
+      <section className="bg-secondary h-96 flex items-center p-4">
+        <h1 className="font-medium">
+          <span className="text-primary">New</span> season.
+          <br />
+          Never known <span className="text-primary">designs</span>.
+        </h1>
+      </section>
+
+      <ProductDisplay products={products} />
     </main>
   );
 }
