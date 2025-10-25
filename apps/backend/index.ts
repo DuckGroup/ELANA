@@ -2,11 +2,11 @@ import express from "express";
 import { auth, requiresAuth } from "express-openid-connect";
 import { connectDB, prisma } from "./db";
 import dotenv from "dotenv";
-import { connectRabbitMQ } from "./src/repository/rabbitmq";
 import productRouter from "./src/routes/productRoutes";
 import userRouter from "./src/routes/userRoutes";
 import { authRouter } from "./src/routes/authRoutes";
 import basketRouter from "./src/routes/basketRouter";
+import { connectRabbitMQ } from "./src/queues/connection";
 
 dotenv.config();
 connectDB();
