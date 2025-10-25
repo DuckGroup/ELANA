@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createBasket } from "../controllers/basketController"
 import { requiresAuth } from "express-openid-connect";
+import { connectBasketController } from "../controllers/basketController";
 const basketRouter = Router();
 
-basketRouter.post("/", requiresAuth(), createBasket)
+basketRouter.post("/", (req, res) => connectBasketController(req, res))
 
 export default basketRouter;
  

@@ -1,7 +1,7 @@
-import { Prisma } from "@prisma/client";
+import { type Basket, Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/prisma";
 
-export const createBasketService = async (user_id: string) => {
+export const createBasketService = async (user_id: string): Promise<Basket> => {
   try {
     const basket = await prisma.basket.create({
       data: {
@@ -9,6 +9,7 @@ export const createBasketService = async (user_id: string) => {
         product_ids: [],
       },
     });
+    return basket;
   } catch (error) {
     throw new Error("Failed to create basket");
   }
