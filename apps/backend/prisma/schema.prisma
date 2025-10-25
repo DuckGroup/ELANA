@@ -50,4 +50,12 @@ model Order {
   basket_id String @unique @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  status     OrderStatus  @default(PENDING)
+}
+
+enum OrderStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
 }
