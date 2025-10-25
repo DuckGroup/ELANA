@@ -35,10 +35,6 @@ export const getBasketByUserIdService = async (
       },
     });
 
-    if (!basket) {
-      throw new Error(`Basket not found for user ${user_id}`);
-    }
-
     return basket;
   } catch (error) {
     throw new Error("Failed to fetch basket");
@@ -71,8 +67,7 @@ export const deleteBasketService = async (
     throw error instanceof Error ? error : new Error("Failed to delete basket");
   }
 };
-export const addProductToBasketService = async (
-  basket_id: string,
+export const addProductToBasketService = async (basket_id: string,
   product_id: string
 ): Promise<Basket> => {
   try {
