@@ -3,6 +3,14 @@ import { prisma } from "../../prisma/prisma";
 
 export const createBasketService = async (user_id: string): Promise<Basket> => {
   try {
+    const user = await prisma.user.findUnique({
+      where: { id: user_id },
+    });
+
+    if (!user) {
+      throw new Error(`User with id ${user_id} not found`);
+    }
+
     const basket = await prisma.basket.create({
       data: {
         user_id: user_id,
@@ -26,6 +34,10 @@ export const getBasketByUserIdService = async (
         user: true,
       },
     });
+
+    if (!basket) {
+      throw new Error(`Basket not found for user ${user_id}`);
+    }
 
     return basket;
   } catch (error) {
@@ -59,7 +71,8 @@ export const deleteBasketService = async (
     throw error instanceof Error ? error : new Error("Failed to delete basket");
   }
 };
-export const addProductToBasketService = async (basket_id: string,
+export const addProductToBasketService = async (
+  basket_id: string,
   product_id: string
 ): Promise<Basket> => {
   try {
