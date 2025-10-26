@@ -28,15 +28,62 @@ export const createBasket = async (
   }
 };
 
+export const deleteBasket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.body;
+    const basket_id = id;
+
+    const basket = publishToQueue({
+      event: "delete.basket",
+      data: basket_id,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Basket deleted successfully",
+    });
+    return;
+  } catch (error) {
+    console.error("Basket queue connection error:", error);
+    return;
+  }
+};
+export const addProductToBasket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.body;
+    const basket_id = id;
+
+    const basket = publishToQueue({
+      event: "delete.basket",
+      data: basket_id,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Basket deleted successfully",
+    });
+    return;
+  } catch (error) {
+    console.error("Basket queue connection error:", error);
+    return;
+  }
+};
+
 export const getBasketByUserId = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const user_id = id;
 
-    if (!user_id || user_id.trim() === "") {
+    if (!user_id) {
       res.status(400).json({
         success: false,
         message: "Failed to fetch, Missing params",
