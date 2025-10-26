@@ -1,5 +1,6 @@
 import amqp, { type Channel } from "amqplib";
 import { basketHandler } from "./handlers/basketHandler";
+import type { BasketMessage } from "./types/basketQueue";
 const QUEUE_NAME = process.env.RABBITMQ_QUEUE!;
 let channel: amqp.Channel | null = null;
 
@@ -18,7 +19,7 @@ export const connectRabbitMQ = async () => {
   await basketHandler(channel);
 };
 
-export const publishToQueue = async (message: { event: string; data: any }) => {
+export const publishToQueue = async (message: { event: string; data: BasketMessage | unknown}) => {
   try {
     if (!channel) {
       throw new Error("RabbitMQ channel not initialized");
