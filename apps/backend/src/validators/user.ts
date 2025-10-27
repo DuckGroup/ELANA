@@ -1,16 +1,10 @@
 import { z } from "zod";
 
-export const emailValidation = z
-  .string()
-  .email("Invalid email format. Example: user@example.com");
+export const emailValidation = z.string().email("Invalid email format. Example: user@example.com");
 
-export const roleValidation = z
-  .enum(["admin", "user", "guest"])
-  .optional();
+export const roleValidation = z.enum(["admin", "user", "guest"]).optional();
 
-export const objectIdValidation = z
-  .string()
-  .regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId format");
+export const idValidation = z.string().min(1, "ID is required");
 
 export const baseUserSchema = z.object({
   email: emailValidation,
@@ -18,17 +12,26 @@ export const baseUserSchema = z.object({
   auth0Id: z.string().optional(),
 });
 
+export const createUserSchema = baseUserSchema.extend({
+  auth0Id: z.string(),
+});
+
+const dateFromString = z.preprocess((arg) => {
+  if (arg instanceof Date) return arg;
+  if (typeof arg === "string") return new Date(arg);
+  return undefined;
+}, z.date());
+
 export const userSchema = baseUserSchema.extend({
-  id: objectIdValidation,
-  // basket: z.any().optional(),  Could later be replaced with Basket type
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  id: idValidation,
+  createdAt: dateFromString,
+  updatedAt: dateFromString,
 });
 
 export const updateUserSchema = baseUserSchema.partial();
 
 export const getUserByIdSchema = z.object({
-  id: objectIdValidation,
+  id: idValidation,
 });
 
 export type BaseUserInput = z.infer<typeof baseUserSchema>;
