@@ -40,30 +40,20 @@ export const createUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const validatedData = baseUserSchema.parse(req.body);
+    const { email, auth0Id } = req.body;
 
-    const user = await createUserService(
-      validatedData.email,
-      validatedData.role as string
-    );
-
-    res.status(201).json(user);
-  } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json({
-        success: false,
-        errors: error.issues,
-        message: "Invalid input data",
-      });
+    if (!email || !auth0Id) {
+      res.status(400).json({ message: "Missing email or auth0Id" });
       return;
     }
-
-    if (error instanceof Error) {
-      res.status(500).json({
-        message: "Error creating user",
-        error: error.message,
-      });
-    }
+    const user = await createUserService(email, auth0Id);
+    res.status(201).json(user);
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({
+      message: "Failed to create user",
+      error: (error as Error).message,
+    });
   }
 };
 
