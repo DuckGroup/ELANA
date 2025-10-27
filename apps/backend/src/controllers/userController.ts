@@ -1,4 +1,5 @@
-import type { Response, Request } from "express";
+import type { Request, Response } from "express";
+import { ZodError } from "zod";
 import {
   createUserService,
   deleteUserService,
@@ -7,11 +8,10 @@ import {
   updateUserService,
 } from "../services/userService";
 import {
-  baseUserSchema,
+  createUserSchema,
   updateUserSchema,
   getUserByIdSchema,
 } from "../validators/user";
-import z from "zod";
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -19,7 +19,7 @@ export const getUsers = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json(users);
   } catch (error) {
     console.error("Could not fetch users:", error);
-    res.status(400).json({ message: (error as Error).message });
+    res.status(500).json({ message: (error as Error).message });
   }
 };
 
@@ -28,9 +28,16 @@ export const getUserById = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = await getUserByIdService(req.params.id as string);
+    const { id } = getUserByIdSchema.parse({ id: req.params.id });
+    const user = await getUserByIdService(id);
     res.status(200).json(user);
   } catch (error) {
+    if (error instanceof ZodError) {
+      res
+        .status(400)
+        .json({ success: false, errors: error.issues, message: "Invalid id" });
+      return;
+    }
     res.status(404).json({ message: (error as Error).message });
   }
 };
@@ -40,17 +47,28 @@ export const createUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { email, auth0Id } = req.body;
+    const validatedData = createUserSchema.parse(req.body);
 
-    if (!email || !auth0Id) {
-      res.status(400).json({ message: "Missing email or auth0Id" });
+    const user = await createUserService(
+      validatedData.email,
+      validatedData.auth0Id
+    );
+    res.status(201).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      res.status(400).json({
+        success: false,
+        errors: error.issues,
+        message: "Invalid input data",
+      });
       return;
     }
-    const user = await createUserService(email, auth0Id);
-    res.status(201).json(user);
-  } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({
+      success: false,
       message: "Failed to create user",
       error: (error as Error).message,
     });
@@ -62,10 +80,17 @@ export const deleteUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = await deleteUserService(req.params.id as string);
+    const { id } = getUserByIdSchema.parse({ id: req.params.id });
+    const user = await deleteUserService(id);
     res.status(200).json({ message: "User deleted", user });
   } catch (error) {
-    res.status(400).json({ message: (error as Error).message });
+    if (error instanceof ZodError) {
+      res
+        .status(400)
+        .json({ success: false, errors: error.issues, message: "Invalid id" });
+      return;
+    }
+    res.status(404).json({ message: (error as Error).message });
   }
 };
 
@@ -74,15 +99,12 @@ export const updateUser = async (
   res: Response
 ): Promise<void> => {
   try {
+    const { id } = getUserByIdSchema.parse({ id: req.params.id });
     const validatedData = updateUserSchema.parse(req.body);
-    const user = await updateUserService(
-      req.params.id as string,
-      validatedData
-    );
-
+    const user = await updateUserService(id, validatedData);
     res.status(200).json(user);
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       res.status(400).json({
         success: false,
         errors: error.issues,
