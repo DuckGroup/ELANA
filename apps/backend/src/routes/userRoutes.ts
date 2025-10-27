@@ -4,8 +4,7 @@ import { createUser, deleteUser, getUserById, getUsers, updateUser } from "../co
 const userRouter = Router();
 
 userRouter.get("/users", getUsers);
-userRouter.get("/users/:id", getUserById)
-userRouter.post("/users", createUser);
+userRouter.get("/users/:id", getUserById);
 userRouter.delete("/users/:id", deleteUser);
 userRouter.patch("/users/:id", updateUser);
 
