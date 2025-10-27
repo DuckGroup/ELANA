@@ -9,6 +9,7 @@ export const getUsersService = async () => {
 };
 
 export const createUserService = async (email: string, auth0Id: string) => {
+  console.log("createUserService called with:", { email, auth0Id });
   if (!email || !auth0Id) {
     throw new Error("Missing email or auth0Id");
   }
@@ -16,7 +17,8 @@ export const createUserService = async (email: string, auth0Id: string) => {
     where: { email },
   });
   if (existingUser) {
-    return existingUser; 
+    console.log("User already exists:", existingUser.id);
+    return existingUser;
   }
   const user = await prisma.user.create({
     data: {
@@ -31,11 +33,11 @@ export const createUserService = async (email: string, auth0Id: string) => {
 
 export const getUserByIdService = async (id: string) => {
   const user = await prisma.user.findUnique({
-    where: {id},
-  })
-  if (!user) throw new Error (`User with id ${id} not found`)
+    where: { id },
+  });
+  if (!user) throw new Error(`User with id ${id} not found`);
   return user;
-}
+};
 
 export const deleteUserService = async (id: string) => {
   const user = await prisma.user.delete({
@@ -44,11 +46,13 @@ export const deleteUserService = async (id: string) => {
   return user;
 };
 
-export const updateUserService = async (id: string, data: {email?: string, role?: string}) => {
+export const updateUserService = async (
+  id: string,
+  data: { email?: string; role?: string }
+) => {
   const user = await prisma.user.update({
     where: { id },
     data,
   });
   return user;
 };
-
