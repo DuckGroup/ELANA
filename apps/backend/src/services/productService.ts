@@ -35,9 +35,9 @@ export const createSingleProduct = async (
   }
 };
 
-export const filterProductsByTitle = async (data: string): Promise<Product> => {
+export const filterProductsByTitle = async (data: string): Promise<Product[] | null> => {
   try {
-    const filteredProduct = await prisma.product.findFirst({
+    const filteredProduct = await prisma.product.findMany({
       where: {
         title: {
           startsWith: data,
