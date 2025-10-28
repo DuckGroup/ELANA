@@ -2,9 +2,10 @@
 import "./globals.css";
 import { Header } from "./components/header";
 import { useEffect, useState } from "react";
-import { getProducts } from "@/lib/api";
+import { getProducts, getProductsByTitle } from "@/lib/api";
 import { Product } from "@/types/product";
 import { ProductDisplay } from "./components/products/productDisplay";
+import { SearchBar } from "./components/searchBar";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,6 +23,7 @@ export default function Home() {
 
     fetchProducts();
   }, []);
+
   return (
     <main>
       <Header></Header>
@@ -32,7 +34,21 @@ export default function Home() {
           Never known <span className="text-primary">designs</span>.
         </h1>
       </section>
-
+      <section className="p-4">
+        <SearchBar
+          onSearch={async (query) => {
+            try {
+              const result = await getProductsByTitle(query);
+              console.log(result)
+              setProducts(result ?? []);
+            } catch (error: unknown) {
+              console.error("Search failed:", error);
+              setProducts([]);
+            }
+          }}
+          placeholder="search..."
+        />
+      </section>
       <ProductDisplay products={products} />
     </main>
   );
