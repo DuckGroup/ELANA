@@ -6,21 +6,22 @@ import { getProducts, getProductsByTitle } from "@/lib/api";
 import { Product } from "@/types/product";
 import { ProductDisplay } from "./components/products/productDisplay";
 import { SearchBar } from "./components/searchBar";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
+  const { user } = useUser();
+  console.log(user);
 
   useEffect(() => {
-    // const session = await auth0.getSession();
-    async function fetchProducts() {
+    const fetchProducts = async () => {
       try {
         const data = await getProducts();
         setProducts(data);
       } catch (error: unknown) {
         console.error("Failed to fetch products:", error);
       }
-    }
-
+    };
     fetchProducts();
   }, []);
 
@@ -39,7 +40,7 @@ export default function Home() {
           onSearch={async (query) => {
             try {
               const result = await getProductsByTitle(query);
-              console.log(result)
+              console.log(result);
               setProducts(result ?? []);
             } catch (error: unknown) {
               console.error("Search failed:", error);

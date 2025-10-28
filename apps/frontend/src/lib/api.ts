@@ -11,6 +11,16 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+// export const apiWithId = axios.create({
+//   baseURL: API_BASE,
+//   headers: {
+//     auth0Id: user,
+//     Accept: "application/json",
+//   },
+//   withCredentials: true,
+// });
+
+
 export async function getProducts(): Promise<Product[]> {
   const res = await api.get("/product");
   const products = res.data.data;

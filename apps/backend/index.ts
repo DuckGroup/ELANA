@@ -42,7 +42,7 @@ const config = {
 };
 app.use(auth(config));
 
-app.use("/", userRouter);
+app.use("/users", userRouter);
 app.use("/product", productRouter);
 app.use("/orders", orderRouter)
 app.use("/auth", authRouter);
