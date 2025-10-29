@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { requiresAuth } from "express-openid-connect";
-import { createBasket, getBasketByUserId } from "../controllers/basketController";
+import { addProductToBasket, createBasket, deleteBasket, getBasketByUserId, removeProductToBasket } from "../controllers/basketController";
 const basketRouter = Router();
 
 basketRouter.post("/", createBasket)
+basketRouter.post("/add-product", addProductToBasket)
 basketRouter.get("/:id", getBasketByUserId)
+basketRouter.delete("/remove-product", removeProductToBasket)
+basketRouter.delete("/:id", deleteBasket)
 
 export default basketRouter;
  

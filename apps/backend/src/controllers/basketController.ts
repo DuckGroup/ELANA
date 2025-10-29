@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import amqp from "amqplib";
 import { publishToQueue } from "../queues/connection";
 import { getBasketByUserIdService } from "../services/basketService";
+import type { BasketMessage } from "../queues/types/basketQueue";
 
 let channel: amqp.Channel | null = null;
 const QUEUE_NAME = "basket_queue";
@@ -11,19 +12,32 @@ export const createBasket = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { user_id } = req.body;
-    const basket = publishToQueue({
+    const { user_id } = req.query;
+
+    if (!user_id || typeof user_id !== "string") {
+      res.status(400).json({
+        success: false,
+        message: "user_id is required",
+      });
+      return;
+    }
+
+    await publishToQueue({
       event: "create.basket",
-      data: user_id,
+      data: { user_id },
     });
 
     res.status(200).json({
       success: true,
-      message: "Basket created successfully",
+      message: "Basket creation queued successfully",
     });
     return;
   } catch (error) {
     console.error("Basket queue connection error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to queue basket creation",
+    });
     return;
   }
 };
@@ -33,21 +47,32 @@ export const deleteBasket = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.body;
-    const basket_id = id;
+    const basket_id = req.params.id;
 
-    const basket = publishToQueue({
+    if (!basket_id || !/^[0-9a-fA-F]{24}$/.test(basket_id)) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid basket ID format",
+      });
+      return;
+    }
+
+    await publishToQueue({
       event: "delete.basket",
-      data: basket_id,
+      data: { basket_id },
     });
 
     res.status(200).json({
       success: true,
-      message: "Basket deleted successfully",
+      message: "Basket deletion queued successfully",
     });
     return;
   } catch (error) {
     console.error("Basket queue connection error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to queue basket deletion",
+    });
     return;
   }
 };
@@ -56,17 +81,38 @@ export const addProductToBasket = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.body;
-    const basket_id = id;
-
+    const data = req.body;
     const basket = publishToQueue({
-      event: "delete.basket",
-      data: basket_id,
+      event: "add.product.basket",
+      data: data,
     });
 
     res.status(200).json({
       success: true,
-      message: "Basket deleted successfully",
+      data: basket,
+      message: "Added product successfully to basket",
+    });
+    return;
+  } catch (error) {
+    console.error("Basket queue connection error:", error);
+    return;
+  }
+};
+export const removeProductToBasket = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const data = req.body;
+    const basket = publishToQueue({
+      event: "remove.product.basket",
+      data: data,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: basket,
+      message: "Removed product successfully from basket",
     });
     return;
   } catch (error) {
@@ -80,8 +126,8 @@ export const getBasketByUserId = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.body;
-    const user_id = id;
+    const user_id = req.params.id;
+    console.log(user_id);
 
     if (!user_id) {
       res.status(400).json({
