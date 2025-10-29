@@ -47,8 +47,9 @@ export const createUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const validatedData = createUserSchema.parse(req.body);
-
+    // const validatedData = createUserSchema.parse(req.body);
+    const validatedData = req.body;
+    console.log(validatedData)
     const user = await createUserService(
       validatedData.email,
       validatedData.auth0Id
