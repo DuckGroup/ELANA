@@ -1,21 +1,31 @@
 import { Router } from "express";
-import { requiresAuth } from "express-openid-connect";
+import { auth } from "express-oauth2-jwt-bearer";
 import { createUserService } from "../services/userService";
+import type { Request, Response } from "express";
 
 const router = Router();
 
-router.get("/profile", requiresAuth(), async (req, res) => {
-  try {
-    const profile = req.oidc?.user;
-    console.log("OIDC profile:", profile);
-    if (!profile) return res.status(401).send("Not authenticated");
+const checkJwt = auth({
+  audience: process.env.AUTH0_AUDIENCE,
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
+  tokenSigningAlg: 'RS256'
+});
 
-    const email = profile.email as string | undefined;
-    const auth0Id = profile.sub as string | undefined;
+router.get("/profile", checkJwt, async (req: Request, res: Response) => {
+  try {
+    const payload = req.auth?.payload;
+    console.log("JWT payload:", payload);
+    
+    if (!payload) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const email = payload.email as string | undefined;
+    const auth0Id = payload.sub as string | undefined;
 
     if (!email || !auth0Id) {
-      console.warn("Missing email or sub in profile:", { email, auth0Id });
-      return res.status(400).json({ message: "Email or auth0Id missing in profile" });
+      console.warn("Missing email or sub in JWT:", { email, auth0Id });
+      return res.status(400).json({ message: "Email or auth0Id missing in token" });
     }
 
     const localUser = await createUserService(email, auth0Id);
@@ -24,7 +34,7 @@ router.get("/profile", requiresAuth(), async (req, res) => {
     res.json({ user: localUser });
   } catch (err) {
     console.error("Profile sync error:", err);
-    res.status(500).send("Server error");
+    res.status(500).json({ message: "Server error" });
   }
 });
 

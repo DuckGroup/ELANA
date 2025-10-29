@@ -43,6 +43,8 @@ export const getProducts = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log('Received auth:', req.auth);
+    
     const products = await getAllProducts();
     res.status(200).json({
       success: true,

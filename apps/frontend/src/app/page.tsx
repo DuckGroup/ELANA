@@ -11,7 +11,6 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    // const session = await auth0.getSession();
     async function fetchProducts() {
       try {
         const data = await getProducts();
@@ -26,7 +25,7 @@ export default function Home() {
 
   return (
     <main>
-      <Header></Header>
+      <Header />
       <section className="bg-secondary h-96 flex items-center p-4">
         <h1 className="font-medium">
           <span className="text-primary">New</span> season.
@@ -39,7 +38,7 @@ export default function Home() {
           onSearch={async (query) => {
             try {
               const result = await getProductsByTitle(query);
-              console.log(result)
+              console.log(result);
               setProducts(result ?? []);
             } catch (error: unknown) {
               console.error("Search failed:", error);
