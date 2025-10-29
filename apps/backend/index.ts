@@ -17,7 +17,7 @@ const ALLOWED = process.env.ALLOWED_ORIGIN!;
 const host = "0.0.0.0";
 
 app.use(express.json());
-connectRabbitMQ();
+// connectRabbitMQ();
 
 app.use(
   cors({
