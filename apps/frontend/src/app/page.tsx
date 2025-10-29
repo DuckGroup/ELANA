@@ -6,12 +6,19 @@ import { getProducts, getProductsByTitle } from "@/lib/api";
 import { Product } from "@/types/product";
 import { ProductDisplay } from "./components/products/productDisplay";
 import { SearchBar } from "./components/searchBar";
-import { useUser } from "@auth0/nextjs-auth0";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
-  const { user } = useUser();
-  console.log(user);
+  const { user, isLoading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/auth/login');
+    }
+  }, [user, isLoading, router]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,8 +29,24 @@ export default function Home() {
         console.error("Failed to fetch products:", error);
       }
     };
-    fetchProducts();
-  }, []);
+    
+    if (user) {
+      fetchProducts();
+    }
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div>Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (!user) {
+    return null;
+  }
 
   return (
     <main>

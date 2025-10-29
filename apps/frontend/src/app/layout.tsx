@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "./components/authProvider";
 
 const playfair = Playfair({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfair.className} antialiased`}>{children}</body>
+      <body className={`${playfair.className} antialiased`}>
+        <AuthProvider>{children}</AuthProvider>
+        </body>
     </html>
   );
 }
