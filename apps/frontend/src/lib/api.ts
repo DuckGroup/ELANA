@@ -12,21 +12,22 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-axios.interceptors.request.use(async function (config) {
-  // Do something before request is sent
+axios.interceptors.request.use(
+  async function (config) {
+    // Do something before request is sent
 
-  const token = await getAccessToken()
+    const token = await getAccessToken();
 
-  config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`;
 
-  console.log("Intercepted and added access token: ", token)
+    console.log("Intercepted and added access token: ", token);
 
-  return config;
-}, function (error) {
-  // Do something with request error
-  return Promise.reject(error);
-},
-{ synchronous: true, runWhen: () => /* This function returns true */}
+    return config;
+  },
+  function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  }
 );
 
 export async function getProducts(): Promise<Product[]> {
