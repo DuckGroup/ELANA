@@ -49,9 +49,11 @@ const checkJwt = jwtCheck({
   jwksUri: `${process.env.ISSUER_BASE_URL}/.well-known/jwks.json`,
 });
 
-app.use("/users", checkJwt, userRouter);
-app.use("/product", checkJwt, productRouter);
-app.use("/orders", checkJwt, orderRouter);
+app.use(checkJwt)
+
+app.use("/users", userRouter);
+app.use("/product", productRouter);
+app.use("/orders", orderRouter);
 app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
