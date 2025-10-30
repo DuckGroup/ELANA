@@ -57,7 +57,7 @@ app.use("/auth", authRouter);
 
 app.use("/basket", basketRouter);
 app.get("/", (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
+  // res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
 
 app.get("/profile", (req, res) => {
