@@ -42,19 +42,20 @@ app.use(
   })
 );
 
-const checkJwt = jwtCheck({
+const requireAuth = jwtCheck({
   audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
   tokenSigningAlg: "RS256",
   jwksUri: `${process.env.ISSUER_BASE_URL}/.well-known/jwks.json`,
 });
 
-app.use(checkJwt)
+app.use("/product", productRouter);
+
+app.use("/auth", authRouter);
 
 app.use("/users", userRouter);
-app.use("/product", productRouter);
+
 app.use("/orders", orderRouter);
-app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");

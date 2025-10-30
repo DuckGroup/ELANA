@@ -14,6 +14,7 @@ export default function Home() {
     // const session = await auth0.getSession();
     async function fetchProducts() {
       try {
+        console.log("GEt products")
         const data = await getProducts();
         setProducts(data);
       } catch (error: unknown) {

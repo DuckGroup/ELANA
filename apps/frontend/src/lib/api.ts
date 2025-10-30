@@ -12,11 +12,16 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-axios.interceptors.request.use(
+api.interceptors.request.use(
   async function (config) {
     // Do something before request is sent
 
-    const token = await getAccessToken();
+    let token;
+    try {
+      token = (await getAccessToken().catch()) || "";
+    } catch (error) {
+      token = "";
+    }
 
     config.headers.Authorization = `Bearer ${token}`;
 
