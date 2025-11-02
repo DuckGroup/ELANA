@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { requiresAuth } from "express-openid-connect";
 import { createUserService } from "../services/userService";
-
+// add requireAuth later
 const router = Router();
 
 router.get("/profile", requiresAuth(), async (req, res) => {

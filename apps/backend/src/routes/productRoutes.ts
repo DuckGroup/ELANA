@@ -6,7 +6,7 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/productController";
-
+// add requireAuth later
 const productRouter = Router();
 
 productRouter.post("/create", createProduct);
