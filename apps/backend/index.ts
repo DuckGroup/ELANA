@@ -9,12 +9,6 @@ import authRouter from "./src/routes/authRoutes";
 import orderRouter from "./src/routes/orderRoutes";
 import cors from "cors";
 
-// Lägga in autentisering i backend
-// Användare skapas ej i db efter första inlogg/registrering
-// Ska ha roles
-// En unik bransch som publiceras vid commit (refactor-0.1)
-// https://elana-1.onrender.com <-- publika backend url
-
 dotenv.config({
   debug: false,
 });
@@ -26,7 +20,7 @@ const ALLOWED = process.env.ALLOWED_ORIGIN!;
 const host = "0.0.0.0";
 
 app.use(express.json());
-//connectRabbitMQ();
+connectRabbitMQ();
 
 app.use(
   cors({
@@ -49,13 +43,13 @@ const requireAuth = jwtCheck({
   jwksUri: `${process.env.ISSUER_BASE_URL}/.well-known/jwks.json`,
 });
 
-app.use("/product", productRouter);
+app.use("/product", productRouter); // add requireAuth later
 
-app.use("/auth", authRouter);
+app.use("/auth", authRouter);// add requireAuth later
 
-app.use("/users", userRouter);
+app.use("/users", userRouter);// add requireAuth later
 
-app.use("/orders", orderRouter);
+app.use("/orders", orderRouter);// add requireAuth later
 
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
