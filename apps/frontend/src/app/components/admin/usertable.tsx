@@ -5,33 +5,39 @@ type Props = {
 };
 
 export const UserTable = ({ users }: Props) => {
-  console.log("UserTable received users:", users);
-
   return (
-    <main className="flex flex-col px-4 py-2 w-full">
-      <h2 className="text-2xl font-bold mb-4">Users</h2>
+    <>
       {users && users.length > 0 ? (
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-stone-300 text-stone-500">
-              <th className="text-left p-2">Email</th>
-              <th className="text-left p-2">Role</th>
-              <th className="text-left p-2">Auth0 ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id} className="border-b border-stone-300 text-sm">
-                <td className="p-2">{user.email}</td>
-                <td className="p-2">{user.role || "N/A"}</td>
-                <td className="p-2">{user.auth0Id || "N/A"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {users.map((user) => (
+            <div
+              key={user.id}
+              className="flex flex-col gap-2 p-4 border border-stone-200 rounded-lg hover:shadow-md transition-shadow bg-white"
+            >
+              <div className="flex flex-col">
+                <span className="text-xs text-stone-500 font-medium">
+                  Email
+                </span>
+                <span className="text-sm">{user.email}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs text-stone-500 font-medium">Role</span>
+                <span className="text-sm">{user.role}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs text-stone-500 font-medium">
+                  Auth ID
+                </span>
+                <span className="text-sm text-stone-600 truncate">
+                  {user.auth0Id}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
-        <p>No users found</p>
+        <p className="text-stone-500">No users found</p>
       )}
-    </main>
+    </>
   );
 };

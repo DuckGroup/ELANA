@@ -59,7 +59,6 @@ export async function getProductsByTitle(query: string): Promise<Product[]> {
 export async function getUsers(): Promise<User[]> {
   try {
     const res = await api.get("/users");
-    console.log("Users response:", res.data);
     return Array.isArray(res.data) ? res.data : [];
   } catch (error) {
     console.error("Error fetching users:", error);
