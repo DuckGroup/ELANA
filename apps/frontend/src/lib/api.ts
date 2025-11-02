@@ -14,8 +14,6 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   async function (config) {
-    // Do something before request is sent
-
     let token;
     try {
       token = (await getAccessToken().catch()) || "";
@@ -30,7 +28,6 @@ api.interceptors.request.use(
     return config;
   },
   function (error) {
-    // Do something with request error
     return Promise.reject(error);
   }
 );

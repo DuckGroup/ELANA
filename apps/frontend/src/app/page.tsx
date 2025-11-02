@@ -11,7 +11,6 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    // const session = await auth0.getSession();
     async function fetchProducts() {
       try {
         console.log("GEt products")
