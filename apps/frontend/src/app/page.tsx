@@ -39,7 +39,7 @@ export default function Home() {
           onSearch={async (query) => {
             try {
               const result = await getProductsByTitle(query);
-              console.log(result)
+              console.log(result);
               setProducts(result ?? []);
             } catch (error: unknown) {
               console.error("Search failed:", error);
