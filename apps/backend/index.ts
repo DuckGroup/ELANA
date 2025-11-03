@@ -50,12 +50,10 @@ app.use("/auth", authRouter);// add requireAuth later
 
 app.use("/users", userRouter);// add requireAuth later
 
-app.use("/users", userRouter);
-app.use("/product", productRouter);
-app.use("/orders", orderRouter)
-app.use("/auth", authRouter);
+app.use("/orders", orderRouter);
 
 app.use("/basket", basketRouter);
+
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
