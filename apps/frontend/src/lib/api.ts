@@ -47,7 +47,6 @@ export async function getProducts(): Promise<Product[]> {
 export async function getProductsByTitle(query: string): Promise<Product[]> {
   try {
     const res = await api.post("/product/by-title", { title: query });
-    console.log(res);
     const products = res.data.data;
     return Array.isArray(products) ? products : [];
   } catch (error) {
@@ -59,7 +58,6 @@ export async function getProductsByTitle(query: string): Promise<Product[]> {
 export async function getProductByTitle(query: string): Promise<Product | null> {
   try {
     const res = await api.get(`/product/${query}`);
-    console.log(res);
     const product = res.data.data;
     return Array.isArray(product) && product.length > 0 ? product[0] : null;
   } catch (error) {
