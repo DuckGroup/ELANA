@@ -66,6 +66,14 @@ export async function getUsers(): Promise<User[]> {
   }
 }
 
+export async function updateUser(
+  id: string,
+  data: { email?: string; role?: string }
+): Promise<User> {
+  const res = await api.patch(`/users/${id}`, data);
+  return res.data;
+}
+
 export interface OrderStats {
   totalOrders: number;
   activeOrders: number;
