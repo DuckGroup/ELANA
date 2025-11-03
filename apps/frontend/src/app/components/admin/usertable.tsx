@@ -58,7 +58,6 @@ export const UserTable = ({ users, onUserUpdate }: Props) => {
                 key={user.id}
                 className="flex flex-col gap-2 p-4 border border-stone-200 rounded-lg hover:shadow-md transition-shadow bg-white"
               >
-                {/* Email */}
                 <div className="flex flex-col">
                   <span className="text-xs text-stone-500 font-medium">
                     Email
@@ -77,7 +76,6 @@ export const UserTable = ({ users, onUserUpdate }: Props) => {
                   )}
                 </div>
 
-                {/* Role */}
                 <div className="flex flex-col">
                   <span className="text-xs text-stone-500 font-medium">
                     Role
@@ -111,7 +109,7 @@ export const UserTable = ({ users, onUserUpdate }: Props) => {
                 {error && isEditing && (
                   <p className="text-xs text-red-600">{error}</p>
                 )}
-                
+
                 <div className="flex gap-2 mt-2">
                   {isEditing ? (
                     <>
