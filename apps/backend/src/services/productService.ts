@@ -53,6 +53,23 @@ export const filterProductsByTitle = async (data: string): Promise<Product[] | n
   }
 };
 
+export const findProductByTitle = async (data: string): Promise<Product | null> => {
+  try {
+    const filteredProduct = await prisma.product.findFirst({
+      where: {
+        title: {
+          startsWith: data,
+          mode: "insensitive",
+        },
+      },
+    });
+    if (!filteredProduct) throw Error("Could not find product");
+    return filteredProduct;
+  } catch (error) {
+    throw Error("Failed to find product");
+  }
+};
+
 export const getAllProducts = async (): Promise<Product[]> => {
   try {
     const products: Product[] = await prisma.product.findMany();
