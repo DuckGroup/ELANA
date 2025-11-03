@@ -26,10 +26,18 @@ export default function AdminUserPage() {
     );
   };
 
+  const handleUserDelete = (userId: string) => {
+    setUsers((prev) => prev.filter((user) => user.id !== userId));
+  };
+
   return (
     <main className="flex flex-col px-4 py-2 w-full">
       <h2 className="text-2xl font-bold mb-4">Users</h2>
-      <UserTable users={users} onUserUpdate={handleUserUpdate} />
+      <UserTable
+        users={users}
+        onUserUpdate={handleUserUpdate}
+        onUserDelete={handleUserDelete}
+      />
     </main>
   );
 }

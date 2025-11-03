@@ -74,6 +74,10 @@ export async function updateUser(
   return res.data;
 }
 
+export async function deleteUser(id: string): Promise<void> {
+  await api.delete(`/users/${id}`);
+}
+
 export interface OrderStats {
   totalOrders: number;
   activeOrders: number;
