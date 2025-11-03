@@ -19,10 +19,17 @@ export default function AdminUserPage() {
 
     fetchUsers();
   }, []);
+
+  const handleUserUpdate = (updatedUser: User) => {
+    setUsers((prev) =>
+      prev.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+    );
+  };
+
   return (
     <main className="flex flex-col px-4 py-2 w-full">
       <h2 className="text-2xl font-bold mb-4">Users</h2>
-      <UserTable users={users} />
+      <UserTable users={users} onUserUpdate={handleUserUpdate} />
     </main>
   );
 }
