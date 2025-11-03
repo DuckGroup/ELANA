@@ -3,6 +3,7 @@ import {
   createSingleProduct,
   deleteSingleProduct,
   filterProductsByTitle,
+  findProductByTitle,
   getAllProducts,
   updateSingleProductDetails,
 } from "../services/productService";
@@ -92,7 +93,7 @@ export const getProductByTitle = async (
     if(!title) {
       return
     }
-    const product = await filterProductsByTitle(title);
+    const product = await findProductByTitle(title);
     res.status(200).json({
       success: true,
       data: product,

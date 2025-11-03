@@ -59,7 +59,8 @@ export async function getProductByTitle(query: string): Promise<Product | null> 
   try {
     const res = await api.get(`/product/${query}`);
     const product = res.data.data;
-    return Array.isArray(product) && product.length > 0 ? product[0] : null;
+    console.log(product)
+    return product;
   } catch (error) {
     console.error("Error fetching product by title:", error);
     return null;

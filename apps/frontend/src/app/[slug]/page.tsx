@@ -11,6 +11,7 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
   const response: Product | null = await getProductByTitle(slug);
+  console.log(response)
   const product = response;
 
   if (!product) {
