@@ -2,12 +2,13 @@ import express from "express";
 import { auth as jwtCheck } from "express-oauth2-jwt-bearer";
 import { connectDB, prisma } from "./db";
 import dotenv from "dotenv";
-import { connectRabbitMQ } from "./src/repository/rabbitmq";
 import productRouter from "./src/routes/productRoutes";
 import userRouter from "./src/routes/userRoutes";
 import authRouter from "./src/routes/authRoutes";
 import orderRouter from "./src/routes/orderRoutes";
+import basketRouter from "./src/routes/basketRouter";
 import cors from "cors";
+import { connectRabbitMQ } from "./src/queues/connection";
 
 dotenv.config({
   debug: false,
@@ -49,8 +50,12 @@ app.use("/auth", authRouter);// add requireAuth later
 
 app.use("/users", userRouter);// add requireAuth later
 
-app.use("/orders", orderRouter);// add requireAuth later
+app.use("/users", userRouter);
+app.use("/product", productRouter);
+app.use("/orders", orderRouter)
+app.use("/auth", authRouter);
 
+app.use("/basket", basketRouter);
 app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
