@@ -1,5 +1,5 @@
 import express from "express";
-import { auth, requiresAuth } from "express-openid-connect";
+import { auth as jwtCheck } from "express-oauth2-jwt-bearer";
 import { connectDB, prisma } from "./db";
 import dotenv from "dotenv";
 import productRouter from "./src/routes/productRoutes";
@@ -10,7 +10,10 @@ import basketRouter from "./src/routes/basketRouter";
 import cors from "cors";
 import { connectRabbitMQ } from "./src/queues/connection";
 
-dotenv.config();
+dotenv.config({
+  debug: false,
+});
+
 connectDB();
 const app = express();
 const port = parseInt(process.env.PORT || "3013", 10);
@@ -33,15 +36,19 @@ app.use(
     exposedHeaders: ["Content-Range", "X-Total-Count"],
   })
 );
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: process.env.SECRET,
-  baseURL: process.env.BASE_URL,
-  clientID: process.env.CLIENT_ID,
+
+const requireAuth = jwtCheck({
+  audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: process.env.ISSUER_BASE_URL,
-};
-app.use(auth(config));
+  tokenSigningAlg: "RS256",
+  jwksUri: `${process.env.ISSUER_BASE_URL}/.well-known/jwks.json`,
+});
+
+app.use("/product", productRouter); // add requireAuth later
+
+app.use("/auth", authRouter);// add requireAuth later
+
+app.use("/users", userRouter);// add requireAuth later
 
 app.use("/users", userRouter);
 app.use("/product", productRouter);
@@ -53,7 +60,7 @@ app.get("/", (req, res) => {
   res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
 });
 
-app.get("/profile", requiresAuth(), (req, res) => {
+app.get("/profile", (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
 
