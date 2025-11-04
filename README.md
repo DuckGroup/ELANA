@@ -1,14 +1,88 @@
-# Turborepo starter
+# Project Name
+> A modern full-stack application built with **Turborepo** monorepo architecture
 
-This Turborepo starter is maintained by the Turborepo core team.
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Apps and Packages](#apps-and-packages)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Development](#development)
+- [Building](#building)
+- [Deployment](#deployment)
+- [Environment Variables](#environment-variables)
+- [Scripts](#scripts)
+- [Tech Stack](#tech-stack)
+- [Turborepo Features](#turborepo-features)
+- [API Endpoints](#api-endpoints)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [Useful Links](#useful-links)
 
-## Using this example
+---
 
-Run the following command:
+## Apps and Packages
+- `docs`: a [Next.js](https://nextjs.org/) app for documentation
+- `web`: the main [Next.js](https://nextjs.org/) frontend application
+- `apps/frontend`: frontend app (Vite + React or Next.js)
+- `apps/backend`: backend API (Node.js with Express or similar)
+- `@repo/ui`: shared React component library used by `web` and `docs`
+- `@repo/eslint-config`: shared ESLint config (includes `eslint-config-next`, `prettier`)
+- `@repo/typescript-config`: shared `tsconfig.json` files across the monorepo
 
-```sh
-npx create-turbo@latest
-```
+> **All packages and apps are 100% [TypeScript](https://www.typescriptlang.org/)**.
+
+### Built-in Tools
+- [TypeScript](https://www.typescriptlang.org/) – static type checking
+- [ESLint](https://eslint.org/) – code linting
+- [Prettier](https://prettier.io) – code formatting
+
+---
+
+## Prerequisites
+Before starting, ensure you have:
+
+- **Bun** >= 1.0.0 → [Install Bun](https://bun.sh)
+- **Node.js** >= 18.0.0 (optional, for certain tools)
+- **Git**
+
+---
+
+## Getting Started
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd <project-name>
+   ```
+2. **install dependencies**
+     ```bun install```
+3. Set up environment variables
+# Frontend
+cp apps/frontend/.env.example apps/frontend/.env
+
+# Backend
+cp apps/backend/.env.example apps/backend/.env
+
+4. Start development servers ```bun run dev```
+
+# Tech Stack
+
+* Monorepo: Turborepo
+* Runtime: Bun
+* Frontend: Next.js / Vite + React
+* Backend: Node.js (Express or Fastify)
+* Language: TypeScript
+* Styling: Tailwind CSS (or CSS Modules)
+* Database: PostgreSQL / MongoDB (via DATABASE_URL)
+* Auth: JWT
+
+
+## Turborepo Features
+
+* Task Pipelines – parallel & cached builds
+* Remote Caching – share cache across CI/CD
+* Filtering – run commands on specific packages
+* Zero-config – works out of the box with Bun
 
 ## What's inside?
 
@@ -32,61 +106,39 @@ This Turborepo has some additional tools already setup for you:
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
 
-### Build
 
-To build all apps and packages, run the following command:
+# API Endpoints
+**Authentication**
 
-```
-cd my-turborepo
+* Method Endpoint,Description
+* POST/auth/register,Register a new user
+* POST/auth/login,Login user
+* POST/auth/logout,Logout user
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+**Example: POST /auth/register**
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+Request:
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+{
+  "email": "user@example.com",
+  "password": "securepassword"
+} 
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+Response: 
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+{
+  "success": true,
+  
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  
+  "user": {
+    
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    
+    "email": "user@example.com"
+  }
+}
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
 
 ### Remote Caching
 
@@ -133,3 +185,4 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
 - [Configuration Options](https://turborepo.com/docs/reference/configuration)
 - [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+
