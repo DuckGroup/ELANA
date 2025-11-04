@@ -25,9 +25,9 @@ export default async function ProductPage({
   return (
     <>
     <Header/>
-    <main className="flex flex-col md:flex-row">
+    <main className="flex flex-col justify-center lg:flex-row">
     <Image alt="image of a ring" src="/goldring.webp" width={720} height={720}/>
-    <section className="flex flex-col px-4 py-2 gap-4 md:justify-center">
+    <section className="flex flex-col px-4 py-2 gap-4 justify-center max-w-156">
       <div>
       <h2 className="font-medium text-3xl">{product.title}</h2>
       <p className="font-medium text-2xl text-stone-700">{product.price} kr</p>
