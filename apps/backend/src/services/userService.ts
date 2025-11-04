@@ -31,11 +31,18 @@ export const createUserService = async (email: string, auth0Id: string) => {
   return user;
 };
 
-export const getUserByIdService = async (id: string) => {
+export const getUserByIdService = async (auth0Id: string) => {
+  console.log("Looking up user with auth0Id:", auth0Id);
+
   const user = await prisma.user.findUnique({
-    where: { id },
+    where: { auth0Id },
   });
-  if (!user) throw new Error(`User with id ${id} not found`);
+
+  if (!user) {
+    console.error(`User with auth0Id ${auth0Id} not found`);
+    throw new Error(`User with auth0Id ${auth0Id} not found`);
+  }
+
   return user;
 };
 

@@ -84,3 +84,13 @@ export async function getOrderStats(): Promise<OrderStats> {
   const res = await api.get("/orders/stats");
   return res.data.data;
 }
+
+export async function getUserById(id: string): Promise<User> {
+  try {
+    const res = await api.get(`/users/${id}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+}
