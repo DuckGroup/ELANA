@@ -34,6 +34,7 @@ export const Button = ({
     return (
       <Link href={route} className={className}>
         {name}
+        
       </Link>
     );
   }

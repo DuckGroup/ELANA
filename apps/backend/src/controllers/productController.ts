@@ -3,6 +3,7 @@ import {
   createSingleProduct,
   deleteSingleProduct,
   filterProductsByTitle,
+  findProductByTitle,
   getAllProducts,
   updateSingleProductDetails,
 } from "../services/productService";
@@ -82,6 +83,33 @@ export const getProductsByTitle = async (
     }
   }
 };
+
+export const getProductByTitle = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const title = req.params.title  
+    if(!title) {
+      return
+    }
+    const product = await findProductByTitle(title);
+    res.status(200).json({
+      success: true,
+      data: product,
+      message: "Product retrieved successfully",
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error fetching product:", error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error",
+      });
+    }
+  }
+};
+
 export const updateProduct = async (
   req: Request,
   res: Response

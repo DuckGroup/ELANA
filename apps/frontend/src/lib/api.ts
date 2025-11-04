@@ -47,12 +47,23 @@ export async function getProducts(): Promise<Product[]> {
 export async function getProductsByTitle(query: string): Promise<Product[]> {
   try {
     const res = await api.post("/product/by-title", { title: query });
-    console.log(res);
     const products = res.data.data;
     return Array.isArray(products) ? products : [];
   } catch (error) {
     console.error("Error fetching products by title:", error);
     return [];
+  }
+}
+
+export async function getProductByTitle(query: string): Promise<Product | null> {
+  try {
+    const res = await api.get(`/product/${query}`);
+    const product = res.data.data;
+    console.log(product)
+    return product;
+  } catch (error) {
+    console.error("Error fetching product by title:", error);
+    return null;
   }
 }
 
