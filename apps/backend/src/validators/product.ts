@@ -2,18 +2,21 @@ import { z } from "zod";
 
 export const baseProductSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  introduction: z.string().nullable(),
-  body: z.string().nullable(),
-  description: z.string().nullable(),
+  introduction: z.string(),
+  body: z.string(),
+  description: z.string(),
   price: z.number().int().positive("Price must be a positive integer"),
-  status: z.boolean().nullable(),
+  status: z.boolean(),
+  images: z.array(z.string()).optional().default([]),
   stock: z
     .number()
     .int()
     .nonnegative("Stock must be a non-negative integer")
     .nullable(),
   basket_ids: z
-    .array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
+    .array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId"))
+    .optional()
+    .default([]),
 });
 
 export type CreateProductInput = z.infer<typeof baseProductSchema>;

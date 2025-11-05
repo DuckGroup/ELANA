@@ -10,4 +10,5 @@ export type Product = {
   status: boolean | null;
   stock: number | null;
   basket_ids: string[];
+  images: string[];
 };
