@@ -15,6 +15,8 @@ dotenv.config({
 });
 
 connectDB();
+connectRabbitMQ();
+
 const app = express();
 const port = parseInt(process.env.PORT || "3013", 10);
 const ALLOWED = process.env.ALLOWED_ORIGIN!;

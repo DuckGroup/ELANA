@@ -56,4 +56,33 @@ export const uploadImagesToCloudinary = async (
   );
 };
 
+export const deleteImageFromCloudinary = async (
+  publicId: string
+): Promise<void> => {
+  try {
+    await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error("Error deleting image from Cloudinary:", error);
+    throw new Error(
+      `Failed to delete image: ${error instanceof Error ? error.message : "Unknown error"}`
+    );
+  }
+};
+
+export const getPublicIdFromUrl = (url: string): String => {
+  const parts = url.split("/");
+  const uploadIndex = parts.indexOf("upload");
+  
+  if (uploadIndex === -1) {
+    throw new Error("Invalid Cloudinary URL");
+  }
+  
+  const publicIdWithExtension = parts.slice(uploadIndex + 2).join("/");
+  const publicId = publicIdWithExtension.split(".")[0];
+  if(!publicId) {
+    throw new Error("Could not find publicId in URL")
+  }
+  return publicId;
+};
+
 export default cloudinary;
