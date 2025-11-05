@@ -5,12 +5,13 @@ import {
   type Product,
   type ProductUpdateData,
 } from "../validators/product";
+import { uploadImagesToCloudinary } from "../repositories/cloudinaryRepository";
 
 export const createSingleProduct = async (
   data: CreateProductInput
 ): Promise<Product> => {
   try {
-    const existingProduct: Product | null = await prisma.product.findFirst({
+    const existingProduct = await prisma.product.findFirst({
       where: { title: data.title },
     });
 
@@ -18,8 +19,13 @@ export const createSingleProduct = async (
       throw new Error("A product with this title already exists");
     }
 
+    const uploadedImageUrls = await uploadImagesToCloudinary(data.images || []);
+
     const product = await prisma.product.create({
-      data: data,
+      data: {
+        ...data,
+        images: uploadedImageUrls,
+      },
     });
 
     return product;
@@ -36,7 +42,9 @@ export const createSingleProduct = async (
   }
 };
 
-export const filterProductsByTitle = async (data: string): Promise<Product[] | null> => {
+export const filterProductsByTitle = async (
+  data: string
+): Promise<Product[] | null> => {
   try {
     const filteredProduct = await prisma.product.findMany({
       where: {
@@ -53,7 +61,9 @@ export const filterProductsByTitle = async (data: string): Promise<Product[] | n
   }
 };
 
-export const findProductByTitle = async (data: string): Promise<Product | null> => {
+export const findProductByTitle = async (
+  data: string
+): Promise<Product | null> => {
   try {
     const filteredProduct = await prisma.product.findFirst({
       where: {
@@ -84,16 +94,31 @@ export const updateSingleProductDetails = async (
   data: ProductUpdateData
 ): Promise<Product> => {
   try {
+    let uploadedImageUrls: string[] | undefined;
+
+    if (data.images && data.images.length > 0) {
+      uploadedImageUrls = await uploadImagesToCloudinary(data.images);
+    }
+
     const updatedProduct = await prisma.product.update({
       where: { id },
       data: {
         ...data,
+        ...(uploadedImageUrls && { images: uploadedImageUrls }),
         updatedAt: new Date(),
       },
     });
+
     return updatedProduct;
   } catch (error) {
-    throw new Error("failed to update product");
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        throw new Error(`Product with id ${id} not found`);
+      }
+    }
+    throw error instanceof Error
+      ? error
+      : new Error("Failed to update product");
   }
 };
 
