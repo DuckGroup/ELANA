@@ -12,6 +12,7 @@ import {
   updateUserSchema,
   getUserByIdSchema,
 } from "../validators/user";
+import { publishToQueue } from "../queues/connection";
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -53,9 +54,16 @@ export const createUser = async (
       validatedData.email,
       validatedData.auth0Id
     );
+
+    await publishToQueue({
+      event: "create.basket",
+      data: { user_id: user.id },
+    });
+
     res.status(201).json({
       success: true,
-      data: user,
+      data: { user },
+      message: "User and basket creation queued successfully",
     });
   } catch (error) {
     if (error instanceof ZodError) {
