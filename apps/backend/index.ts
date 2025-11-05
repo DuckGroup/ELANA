@@ -65,3 +65,12 @@ app.get("/profile", (req, res) => {
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}`);
 });
+
+setInterval(async () => {
+  try {
+    const res = await fetch("https://u10.onrender.com");
+    console.log(`Self ping OK: ${res.status}`);
+  } catch (error) {
+    console.error("Could not self ping:", error);
+  }
+}, 14 * 60 * 1000);
