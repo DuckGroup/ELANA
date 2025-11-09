@@ -10,7 +10,6 @@ import {
 import {
   baseProductSchema,
   getProductByTitleSchema,
-  productSchema,
   updateProductSchema,
 } from "../validators/product";
 import z from "zod";
@@ -22,20 +21,32 @@ export const createProduct = async (
   try {
     const validatedData = baseProductSchema.parse(req.body);
     const product = await createSingleProduct(validatedData);
-    res.status(200).json(product);
+    
+    res.status(201).json({
+      success: true,
+      data: product,
+      message: "Product created successfully",
+    });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       res.status(400).json({
         success: false,
-        errors: error.message,
+        errors: error,
         message: "Invalid input data",
       });
       return;
-    } else if (error instanceof Error)
-      res.status(error.message.includes("already exists") ? 409 : 400).json({
+    }
+    if (error instanceof Error) {
+      res.status(error.message.includes("already exists") ? 409 : 500).json({
         success: false,
         message: error.message,
       });
+      return;
+    }
+    res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred",
+    });
   }
 };
 

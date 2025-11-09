@@ -11,11 +11,13 @@
   "dependencies": {
     "@prisma/client": "^6.17.1",
     "amqplib": "^0.10.9",
+    "cloudinary": "^2.8.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-oauth2-jwt-bearer": "^1.7.1",
     "express-openid-connect": "^2.19.2",
+    "multer": "^2.0.2",
     "prisma": "^6.17.1",
     "tsup": "^8.5.0",
     "zod": "^4.1.12"
@@ -24,6 +26,7 @@
     "@types/amqplib": "^0.10.7",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/multer": "^2.0.0",
     "@types/node": "^20",
     "typescript": "^5"
   },
