@@ -15,13 +15,14 @@ dotenv.config({
 });
 
 connectDB();
+connectRabbitMQ();
+
 const app = express();
 const port = parseInt(process.env.PORT || "3013", 10);
 const ALLOWED = process.env.ALLOWED_ORIGIN!;
 const host = "0.0.0.0";
 
 app.use(express.json());
-connectRabbitMQ();
 
 app.use(
   cors({

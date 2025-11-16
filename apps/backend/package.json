@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "build": "prisma generate && bun run index.ts",
-    "start": "bun run dist/index.js",
+    "build": "prisma generate",
+    "start": "bun run index.ts",
     "dev": "bun run index.ts",
     "postinstall": "prisma generate"
   },
