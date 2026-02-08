@@ -15,13 +15,15 @@ dotenv.config({
 });
 
 connectDB();
+connectRabbitMQ();
+
 const app = express();
 const port = parseInt(process.env.PORT || "3013", 10);
 const ALLOWED = process.env.ALLOWED_ORIGIN!;
 const host = "0.0.0.0";
 
-app.use(express.json());
-connectRabbitMQ();
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 app.use(
   cors({
@@ -46,9 +48,9 @@ const requireAuth = jwtCheck({
 
 app.use("/product", productRouter); // add requireAuth later
 
-app.use("/auth", authRouter);// add requireAuth later
+app.use("/auth", authRouter); // add requireAuth later
 
-app.use("/users", userRouter);// add requireAuth later
+app.use("/users", userRouter); // add requireAuth later
 
 app.use("/orders", orderRouter);
 
@@ -66,11 +68,14 @@ app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}`);
 });
 
-setInterval(async () => {
-  try {
-    const res = await fetch("https://u10.onrender.com");
-    console.log(`Self ping OK: ${res.status}`);
-  } catch (error) {
-    console.error("Could not self ping:", error);
-  }
-}, 14 * 60 * 1000);
+setInterval(
+  async () => {
+    try {
+      const res = await fetch("https://u10.onrender.com");
+      console.log(`Self ping OK: ${res.status}`);
+    } catch (error) {
+      console.error("Could not self ping:", error);
+    }
+  },
+  14 * 60 * 1000
+);
