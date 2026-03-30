@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "build": "prisma generate",
-    "start": "bun run index.ts",
+    "build": "tsup index.ts",
+    "start": "bun run dist/index.js",
     "dev": "bun run index.ts",
     "postinstall": "prisma generate"
   },
@@ -21,6 +21,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@auth0/nextjs-auth0": "^4.16.1",
     "@types/amqplib": "^0.10.7",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",

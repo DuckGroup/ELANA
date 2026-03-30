@@ -2,8 +2,9 @@ FROM oven/bun:1.2
 
 WORKDIR /app
 
-COPY package.json bun.lockb* ./
+RUN apt-get update -y && apt-get install -y openssl
 
+COPY package.json .
 COPY prisma ./prisma/
 
 RUN bun install
