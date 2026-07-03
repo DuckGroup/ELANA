@@ -27,6 +27,9 @@ model Product {
   price        Int
   status       Boolean?
   stock        Int?
+  category     String?
+  size         String[]
+  image        String?
   basket_ids   String[] @db.ObjectId
   baskets      Basket[] @relation(fields: [basket_ids], references: [id])
   createdAt    DateTime @default(now())

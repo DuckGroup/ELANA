@@ -12,6 +12,9 @@ export const baseProductSchema = z.object({
     .int()
     .nonnegative("Stock must be a non-negative integer")
     .nullable(),
+  category: z.string().nullable().optional(),
+  size: z.array(z.string()).optional(),
+  image: z.string().nullable().optional(),
   basket_ids: z
     .array(z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")),
 });
