@@ -37,10 +37,9 @@ export const ProductForm = ({ initial, onSaved, onCancel }: Props) => {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const payload = {
+    const fields = {
       title,
       introduction: introduction || null,
-      body: null,
       description: description || null,
       price: Number(price),
       status: inStock,
@@ -48,14 +47,15 @@ export const ProductForm = ({ initial, onSaved, onCancel }: Props) => {
       category: category || null,
       size: sizeList,
       image: image || null,
-      basket_ids: [],
     };
 
     try {
       if (initial) {
-        await updateProduct(initial.id, payload);
+        // Only send the fields the form owns, so editing never wipes
+        // untouched fields (body) or basket relations (basket_ids).
+        await updateProduct(initial.id, fields);
       } else {
-        await createProduct(payload);
+        await createProduct({ ...fields, body: null, basket_ids: [] });
       }
       onSaved();
     } catch (err) {
