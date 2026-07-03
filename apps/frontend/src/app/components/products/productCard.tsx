@@ -9,7 +9,7 @@ type Props = {
 export const ProductCard = ({ image, title, price, category }: Props) => {
   return (
     <Link
-      href={`/${title}`}
+      href={`/${encodeURIComponent(title)}`}
       className="w-40 md:w-56 hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] transition-shadow duration-200"
     >
       <article className="flex flex-col h-full">

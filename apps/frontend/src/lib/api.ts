@@ -59,7 +59,7 @@ export async function getProductsByTitle(query: string): Promise<Product[]> {
 
 export async function getProductByTitle(query: string): Promise<Product | null> {
   try {
-    const res = await api.get(`/product/${query}`);
+    const res = await api.get(`/product/${encodeURIComponent(query)}`);
     const product = res.data.data;
     console.log(product)
     return product;
