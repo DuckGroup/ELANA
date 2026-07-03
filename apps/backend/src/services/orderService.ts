@@ -23,15 +23,37 @@ export const getOrderStatsService = async () => {
 };
 
 export const getOrdersService = async () => {
-  const orders = await prisma.order.findMany({
-    include: {
+  // Join in JS instead of nested includes: Basket.user is a required relation,
+  // so a nested include throws if any referenced user/basket was deleted
+  // (MongoDB does not enforce referential integrity). This tolerates orphans.
+  const [orders, baskets, users, products] = await Promise.all([
+    prisma.order.findMany({ orderBy: { createdAt: "desc" } }),
+    prisma.basket.findMany(),
+    prisma.user.findMany(),
+    prisma.product.findMany(),
+  ]);
+
+  const basketById = new Map(baskets.map((b) => [b.id, b]));
+  const userById = new Map(users.map((u) => [u.id, u]));
+  const productById = new Map(products.map((p) => [p.id, p]));
+
+  return orders.map((order) => {
+    const basket = basketById.get(order.basket_id);
+    if (!basket) {
+      return { ...order, basket: null };
+    }
+    return {
+      ...order,
       basket: {
-        include: { user: true, products: true },
+        ...basket,
+        user: userById.get(basket.user_id) ?? null,
+        products: basket.product_ids.flatMap((id) => {
+          const product = productById.get(id);
+          return product ? [product] : [];
+        }),
       },
-    },
-    orderBy: { createdAt: "desc" },
+    };
   });
-  return orders;
 };
 
 export const createOrderService = async (basket_id: string) => {
