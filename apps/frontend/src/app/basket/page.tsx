@@ -1,7 +1,8 @@
 import { Header } from "../components/header";
 import { auth0 } from "@/lib/auth0";
 import { getBasket, getUserById } from "@/lib/api";
-import { Product } from "@/types/product";
+import { Basket } from "@/types/basket";
+import { BasketCard } from "../components/basket/basketCard";
 import { redirect } from "next/navigation";
 
 export default async function BasketPage() {
@@ -11,16 +12,17 @@ export default async function BasketPage() {
     redirect("/auth/login");
   }
 
-  let products: Product[] = [];
+  let basket: Basket | null = null;
 
   try {
     const user = await getUserById(session.user.sub);
-    const basket = await getBasket(user.id);
-    products = basket?.products ?? [];
+    basket = await getBasket(user.id);
   } catch (error) {
     console.error("Failed to load basket:", error);
   }
 
+  const products = basket?.products ?? [];
+  const basketId = basket?.id ?? "";
   const total = products.reduce((sum, product) => sum + product.price, 0);
 
   return (
@@ -35,13 +37,11 @@ export default async function BasketPage() {
           <>
             <div className="flex flex-col divide-y divide-stone-200">
               {products.map((product) => (
-                <div
+                <BasketCard
                   key={product.id}
-                  className="flex items-center justify-between py-3"
-                >
-                  <span>{product.title}</span>
-                  <span className="font-medium">{product.price} kr</span>
-                </div>
+                  basketId={basketId}
+                  product={product}
+                />
               ))}
             </div>
             <div className="flex items-center justify-between border-t border-stone-200 pt-4">

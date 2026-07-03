@@ -126,3 +126,12 @@ export async function addToBasket(
     product_id: productId,
   });
 }
+
+export async function removeFromBasket(
+  basketId: string,
+  productId: string
+): Promise<void> {
+  await api.delete("/basket/remove-product", {
+    data: { basket_id: basketId, product_id: productId },
+  });
+}
