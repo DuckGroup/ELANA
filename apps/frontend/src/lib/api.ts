@@ -2,6 +2,7 @@ import { Product } from "@/types/product";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { User } from "@/types/user";
 import { Basket } from "@/types/basket";
+import { Order } from "@/types/order";
 import axios from "axios";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3013";
@@ -146,4 +147,15 @@ export interface CheckoutSession {
 export async function createOrder(basketId: string): Promise<CheckoutSession> {
   const res = await api.post("/orders", { basket_id: basketId });
   return res.data.checkout;
+}
+
+export async function getOrders(): Promise<Order[]> {
+  try {
+    const res = await api.get("/orders");
+    const orders = res.data.data;
+    return Array.isArray(orders) ? orders : [];
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return [];
+  }
 }
