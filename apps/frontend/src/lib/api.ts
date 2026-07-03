@@ -159,3 +159,34 @@ export async function getOrders(): Promise<Order[]> {
     return [];
   }
 }
+
+export type ProductInput = {
+  title: string;
+  introduction: string | null;
+  body: string | null;
+  description: string | null;
+  price: number;
+  status: boolean | null;
+  stock: number | null;
+  category: string | null;
+  size: string[];
+  image: string | null;
+  basket_ids: string[];
+};
+
+export async function createProduct(data: ProductInput): Promise<Product> {
+  const res = await api.post("/product/create", data);
+  return res.data;
+}
+
+export async function updateProduct(
+  id: string,
+  data: Partial<ProductInput>
+): Promise<Product> {
+  const res = await api.put(`/product/${id}`, data);
+  return res.data.data;
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+  await api.delete(`/product/${id}`);
+}
