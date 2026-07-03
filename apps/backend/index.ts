@@ -69,7 +69,7 @@ app.listen(port, host, () => {
 
 setInterval(async () => {
   try {
-    const res = await fetch("https://u10.onrender.com");
+    const res = await fetch("https://elana.onrender.com");
     console.log(`Self ping OK: ${res.status}`);
   } catch (error) {
     console.error("Could not self ping:", error);
