@@ -1,19 +1,20 @@
 "use client";
 import "./globals.css";
 import { Header } from "./components/header";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getProducts, getProductsByTitle } from "@/lib/api";
 import { Product } from "@/types/product";
 import { ProductDisplay } from "./components/products/productDisplay";
+import { CategoryFilter } from "./components/products/categoryFilter";
 import { SearchBar } from "./components/searchBar";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [category, setCategory] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProducts() {
       try {
-        console.log("GEt products")
         const data = await getProducts();
         setProducts(data);
       } catch (error: unknown) {
@@ -23,6 +24,18 @@ export default function Home() {
 
     fetchProducts();
   }, []);
+
+  const categories = useMemo(() => {
+    const unique = new Set<string>();
+    for (const product of products) {
+      if (product.category) unique.add(product.category);
+    }
+    return Array.from(unique);
+  }, [products]);
+
+  const visibleProducts = category
+    ? products.filter((product) => product.category === category)
+    : products;
 
   return (
     <main>
@@ -34,13 +47,13 @@ export default function Home() {
           Never known <span className="text-primary">designs</span>.
         </h1>
       </section>
-      <section className="p-4">
+      <section className="p-4 flex flex-col gap-4">
         <SearchBar
           onSearch={async (query) => {
             try {
               const result = await getProductsByTitle(query);
-              console.log(result);
               setProducts(result ?? []);
+              setCategory(null);
             } catch (error: unknown) {
               console.error("Search failed:", error);
               setProducts([]);
@@ -48,8 +61,13 @@ export default function Home() {
           }}
           placeholder="search..."
         />
+        <CategoryFilter
+          categories={categories}
+          selected={category}
+          onSelect={setCategory}
+        />
       </section>
-      <ProductDisplay products={products} />
+      <ProductDisplay products={visibleProducts} />
     </main>
   );
 }
