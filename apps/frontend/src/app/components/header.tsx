@@ -10,7 +10,7 @@ export const Header = () => {
       <Link href="/">
       <Image src="/elana_logo.svg" alt="logo" width="163" height="80"></Image>
       </Link>
-      <IconButton size="md" href="#" icon={ShoppingCart}></IconButton>
+      <IconButton size="md" href="/basket" icon={ShoppingCart}></IconButton>
     </nav>
   );
 };

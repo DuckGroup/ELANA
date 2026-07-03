@@ -12,9 +12,10 @@ export const ProductDisplay = ({
         products.map((product: Product) => (
           <ProductCard
             key={product.id}
-            image="/elana_logo.svg"
+            image={product.image || "/elana_logo.svg"}
             title={product.title}
             price={product.price}
+            category={product.category}
           />
         ))
       ) : (
