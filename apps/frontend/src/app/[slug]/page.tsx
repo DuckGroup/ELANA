@@ -3,6 +3,7 @@ import { Button } from "../components/button";
 import { Product } from "@/types/product";
 import Image from "next/image";
 import { Header } from "../components/header";
+import { SizePicker } from "../components/products/sizePicker";
 
 export default async function ProductPage({
   params,
@@ -33,6 +34,7 @@ export default async function ProductPage({
       <p className="font-medium text-2xl text-stone-700">{product.price} kr</p>
       <p className="text-stone-600 pt-2">{product.introduction}</p>
       </div>
+      <SizePicker sizes={product.size} />
       <Button name="Add to cart" buttonType="click" color="primary" textColor="white"/>
       <div className="flex flex-col gap-6">
       <p className="text-stone-600">{product.body}</p>
