@@ -135,3 +135,15 @@ export async function removeFromBasket(
     data: { basket_id: basketId, product_id: productId },
   });
 }
+
+export interface CheckoutSession {
+  sessionId: string;
+  checkoutUrl: string;
+  amountTotal: number;
+  currency: string;
+}
+
+export async function createOrder(basketId: string): Promise<CheckoutSession> {
+  const res = await api.post("/orders", { basket_id: basketId });
+  return res.data.checkout;
+}

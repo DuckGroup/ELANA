@@ -3,6 +3,7 @@ import { auth0 } from "@/lib/auth0";
 import { getBasket, getUserById } from "@/lib/api";
 import { Basket } from "@/types/basket";
 import { BasketCard } from "../components/basket/basketCard";
+import { CheckoutButton } from "../components/basket/checkoutButton";
 import { redirect } from "next/navigation";
 
 export default async function BasketPage() {
@@ -48,6 +49,7 @@ export default async function BasketPage() {
               <span className="text-lg font-medium">Total</span>
               <span className="text-lg font-medium">{total} kr</span>
             </div>
+            <CheckoutButton basketId={basketId} />
           </>
         )}
       </main>
