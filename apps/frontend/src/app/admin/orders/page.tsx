@@ -1,6 +1,10 @@
 import { getOrders } from "@/lib/api";
 import { OrderStatus } from "@/types/order";
 
+// Fetches live data, so render at request time instead of at build time
+// (static prerendering has no backend to call and times the build out).
+export const dynamic = "force-dynamic";
+
 const statusClass = (status: OrderStatus) => {
   const map: Record<OrderStatus, string> = {
     PENDING: "bg-amber-100 text-amber-700",
