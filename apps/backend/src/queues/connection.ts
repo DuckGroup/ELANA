@@ -5,18 +5,27 @@ const QUEUE_NAME = process.env.RABBITMQ_QUEUE!;
 let channel: amqp.Channel | null = null;
 
 export const connectRabbitMQ = async () => {
-  const connection = await amqp.connect(process.env.RABBITMQ_URL || "");
-  channel = await connection.createChannel();
-  await channel.assertQueue(QUEUE_NAME, { durable: true });
+  // Never crash the API if the broker is unreachable (e.g. free tier
+  // without RabbitMQ) — queue features are simply disabled.
+  try {
+    const connection = await amqp.connect(process.env.RABBITMQ_URL || "");
+    channel = await connection.createChannel();
+    await channel.assertQueue(QUEUE_NAME, { durable: true });
 
-  console.log("Connected to RabbitMQ");
+    console.log("Connected to RabbitMQ");
 
-  connection.on("error", (err) =>
-    console.error("RabbitMQ connection error:", err)
-  );
-  connection.on("close", () => console.log("Disconnected from RabbitMQ"));
+    connection.on("error", (err) =>
+      console.error("RabbitMQ connection error:", err)
+    );
+    connection.on("close", () => console.log("Disconnected from RabbitMQ"));
 
-  await basketHandler(channel);
+    await basketHandler(channel);
+  } catch (error) {
+    console.error(
+      "RabbitMQ unavailable, queue features disabled:",
+      error instanceof Error ? error.message : error
+    );
+  }
 };
 
 export const publishToQueue = async (message: { event: string; data: BasketMessage | unknown}) => {
