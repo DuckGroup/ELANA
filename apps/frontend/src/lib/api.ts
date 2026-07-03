@@ -190,3 +190,7 @@ export async function updateProduct(
 export async function deleteProduct(id: string): Promise<void> {
   await api.delete(`/product/${id}`);
 }
+
+export async function deleteUser(id: string): Promise<void> {
+  await api.delete(`/users/${id}`);
+}
