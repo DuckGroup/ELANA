@@ -1,6 +1,7 @@
 import { Product } from "@/types/product";
 import { getAccessToken } from "@auth0/nextjs-auth0";
 import { User } from "@/types/user";
+import { Basket } from "@/types/basket";
 import axios from "axios";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:3013";
@@ -103,5 +104,15 @@ export async function getUserById(id: string): Promise<User> {
   } catch (error) {
     console.error("Error fetching user:", error);
     throw error;
+  }
+}
+
+export async function getBasket(userId: string): Promise<Basket | null> {
+  try {
+    const res = await api.get(`/basket/${userId}`);
+    return res.data.data;
+  } catch (error) {
+    console.error("Error fetching basket:", error);
+    return null;
   }
 }
