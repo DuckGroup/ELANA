@@ -1,6 +1,7 @@
 import { prisma } from "../../prisma/prisma";
 import { OrderStatus } from "@prisma/client";
 import { isValidObjectId } from "../repositories/validationRepository";
+import { createCheckoutSession } from "./stripeService";
 
 
 export const getOrderStatsService = async () => {
@@ -63,5 +64,7 @@ export const createOrderService = async (basket_id: string) => {
     },
   });
 
-  return order;
+  const checkout = await createCheckoutSession(basket_id);
+
+  return { order, checkout };
 };

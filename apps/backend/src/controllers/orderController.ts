@@ -40,10 +40,11 @@ export const getOrders = async (req: Request, res: Response) => {
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const { basket_id } = createOrderSchema.parse(req.body);
-    const order = await createOrderService(basket_id);
+    const { order, checkout } = await createOrderService(basket_id);
     res.status(201).json({
       success: true,
       data: order,
+      checkout,
       message: "Order created successfully",
     });
   } catch (error) {
