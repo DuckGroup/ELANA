@@ -116,3 +116,13 @@ export async function getBasket(userId: string): Promise<Basket | null> {
     return null;
   }
 }
+
+export async function addToBasket(
+  basketId: string,
+  productId: string
+): Promise<void> {
+  await api.post("/basket/add-product", {
+    basket_id: basketId,
+    product_id: productId,
+  });
+}
