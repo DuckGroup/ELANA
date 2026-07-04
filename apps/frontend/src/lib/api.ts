@@ -59,10 +59,21 @@ export async function getProductsByTitle(query: string): Promise<Product[]> {
 
 export async function getProductByTitle(query: string): Promise<Product | null> {
   try {
-    const res = await api.get(`/product/${encodeURIComponent(query)}`);
-    const product = res.data.data;
-    console.log(product)
-    return product;
+    // The [slug] route param arrives URL-encoded, so normalise it back to the
+    // raw title and look it up by JSON body — this avoids any URL-encoding
+    // pitfalls (a space in the title otherwise breaks the GET-by-path lookup).
+    let title = query;
+    try {
+      title = decodeURIComponent(query);
+    } catch {
+      title = query;
+    }
+
+    const res = await api.post("/product/by-title", { title });
+    const products = res.data.data;
+    if (!Array.isArray(products)) return null;
+
+    return products.find((p: Product) => p.title === title) ?? products[0] ?? null;
   } catch (error) {
     console.error("Error fetching product by title:", error);
     return null;

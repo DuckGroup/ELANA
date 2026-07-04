@@ -47,13 +47,32 @@ export const getBasketByUserIdService = async (
   try {
     isValidObjectId(user_id);
 
-    const basket = await prisma.basket.findUnique({
+    let basket = await prisma.basket.findUnique({
       where: { user_id },
       include: {
         products: true,
-        user: true,
       },
     });
+
+    // Users synced via Auth0 login never received a create.basket event,
+    // so lazily create an empty basket on first access instead of 404ing.
+    if (!basket) {
+      try {
+        await prisma.basket.create({
+          data: { user_id, product_ids: [] },
+        });
+      } catch (createError) {
+        // Ignore unique-violation races; the re-read below returns the basket.
+        console.error("Lazy basket create race:", createError);
+      }
+
+      basket = await prisma.basket.findUnique({
+        where: { user_id },
+        include: {
+          products: true,
+        },
+      });
+    }
 
     return basket;
   } catch (error) {
